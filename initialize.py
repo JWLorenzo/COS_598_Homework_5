@@ -1,6 +1,7 @@
 from display import Display
 import pygame
 from pygame.locals import *
+import CONSTANTS
 
 
 def initialize_game() -> Display:

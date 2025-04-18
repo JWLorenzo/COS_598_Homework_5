@@ -8,4 +8,4 @@ class Display:
         self.clock: pygame.time.Clock = clock
         self.run: bool = True
         self.delta: int = 0
-        self.font: pygame.freetype.Font = None
+        self.font: pygame.freetype.Font | None = None
