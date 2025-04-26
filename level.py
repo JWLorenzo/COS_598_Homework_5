@@ -1,8 +1,7 @@
 import pygame
-from CONSTANTS import IMAGE_DIR, TILE_SIZE, TILE_SCALE
+from CONSTANTS import IMAGE_DIR, TILE_SCALE
 from display import Display
 import os
-import copy
 
 
 class Level:
@@ -10,69 +9,55 @@ class Level:
         self.window_info: tuple[int, int] = pygame.display.get_window_size()
         self.winw: int = self.window_info[0]
         self.winh: int = self.window_info[1]
-        self.background: pygame.Surface = pygame.Surface((self.winw, self.winh))
+        self.background: pygame.Surface = display.screen
 
         # TODO Use array to generate rooms and hold data in dicts
         # TODO support multi tileset generation
-        dungeon_tiles_names: list[str] = [
-            "floor",
-            "wall_vertical",
-            "wall_horizontal",
-            "corner_bottom",
-        ]
-        dungeon_tiles: dict[str, dict[str, pygame.Surface]] = {}
+
+        self.dungeon_tiles: dict[str, pygame.Surface] = {}
         tile_path: str = os.path.join(IMAGE_DIR, "Dungeon_Tiles")
 
-        for tileset in os.listdir(tile_path):
-            if os.path.isdir(os.path.join(tile_path, tileset)):
-                dungeon_tiles[tileset] = {}
-                for name in dungeon_tiles_names:
-                    dungeon_tiles[tileset][name] = pygame.image.load(
-                        os.path.join(tile_path, tileset, name + ".png")
-                    ).convert()
-                    dungeon_tiles[tileset][name] = pygame.transform.scale(
-                        dungeon_tiles[tileset][name], TILE_SCALE
-                    )
+        for tile in os.listdir(tile_path):
+            if tile.endswith(".png"):
+                filename = os.path.splitext(tile)[0]
+                self.dungeon_tiles[filename] = pygame.image.load(
+                    os.path.join(tile_path, tile)
+                ).convert()
+                self.dungeon_tiles[filename] = pygame.transform.scale(
+                    self.dungeon_tiles[filename], TILE_SCALE
+                )
+                print(tile)
 
-        ## DELETE THIS, IT IS TEMPORARY
-        print(dungeon_tiles)
-        for tile_h in range(self.winh // TILE_SIZE):
-            for tile_w in range(self.winw // TILE_SIZE):
-                pass
-                # self.background.blit(tile, rect)
-        # self.backgroundbox: pygame.Rect = display.screen.get_rect()
+        # # Base Case
 
-    # background: pygame.Surface = pygame.image.load(
-    #     os.path.join(IMAGE_DIR, "background.png")
-    # ).convert()
+        # if w <= 2 * ROOM_WIDTH or h <= 2 * ROOM_HEIGHT:
+        #     print(f"Drawing room at ({x}, {y}) with size ({w}, {h})")
+        #     pygame.draw.rect(self.background, "blue", (x, y, w, h))
+        #     pygame.draw.rect(self.background, "white", (x, y, w, h), 2)
 
-    def generate_room(self) -> list[list[str]]:
-        # Let's create a semantic dictionary
+        #     pygame.display.flip()
+        # elif (w >= (2*ROOM_WIDTH)) or (h >= (2*ROOM_HEIGHT)):
+        #     # Recursive Step
+        #     direction: str = random.choice(["horizontal", "vertical"])
 
-        tile_dict: dict[str, list[list[str]]] = {
-            "1": [["wvl", "wh"], ["wvl", "f"]],
-            "2": [["wh", "wh"], ["f", "f"]],
-            "3": [["wh", "wvr"], ["f", "wvr"]],
-            "4": [["wvl", "f"], ["wvl", "f"]],
-            "5": [["f", "wvr"], ["f", "wvr"]],
-            "6": [["f", "f"], ["f", "f"]],
-            "7": [["wvl", "f"], ["wvl", "wh"]],
-            "8": [["f", "f"], ["wh", "wh"]],
-            "9": [["f", "wvr"], ["wh", "wvr"]],
-            "10": [["wvl", "wvr"], ["wh", "wh"]],
-        }
-        tile_connections: dict[str, list[tuple[int, str]]] = {
-            "1": [(2, "E"), (4, "S")],
-            "2": [(1, "W"), (3, "E"), (6, "S")],
-            "3": [(2, "W"), (5, "S")],
-            "4": [(1, "N"), (6, "E"), (7, "S")],
-            "5": [(6, "W"), (3, "N"), (9, "S")],
-            "6": [(2, "N"), (4, "W"), (5, "E"), (8, "S")],
-            "7": [(4, "N"), (8, "E")],
-            "8": [(6, "N"), (7, "W"), (9, "E")],
-            "9": [(8, "W"), (5, "N")],
-            "10": [(2, "W"), (2, "E"), (6, "S")],
-        }
-        return [[""]]
+        #     tile_width = random.randint(1, (w // TILE_SIZE) - 1) * TILE_SIZE
+        #     tile_height = random.randint(1, (h // TILE_SIZE) - 1) * TILE_SIZE
+
+        #     # Split vertically
+        #     if direction == "vertical":
+        #         pass
+        #         self.binary_space_partition(x, y, tile_width, h)
+        #         self.binary_space_partition(x + tile_width, y, w - tile_width, h)
+        #     # Split horizontally
+        #     elif direction == "horizontal":
+        #         pass
+        #         self.binary_space_partition(x, y, w, tile_height)
+        #         self.binary_space_partition(x, y + tile_height, w, h - tile_height)
+
+    def generate_room(self) -> pygame.Surface:
+
+        return pygame.Surface(
+            (0, 0)
+        )  # Placeholder return value until the function is implemented
 
         pass

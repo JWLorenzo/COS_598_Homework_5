@@ -15,3 +15,20 @@
 - Roguelite game with DragonQuest Elements.
 - Class-based system
 - AI for monsters
+
+## Ideas:
+- Cellular automata similar to the in class
+    - Could work, but we want smooth walls, I want the hero to be going through the halls of Moria, not of a cave. Could do a pathfinding algorithm around the cave surface to smooth it out.
+
+- Binary space partitioning:
+    - Tried and true, but I have an idea for a twist:
+        - We partition the spaces, then randomly create rectangles within the area. We deteremine the number of rectangles based on the size of the area. 
+        - We then effectively use a form of cellular automata to update the outer wall of the structure. In a 3x3 area, we know that if at least 1 of the tiles is empty, then it has to be a wall. 
+        - Hopefully the randomness will mean that it's lumpy. 
+
+
+# Sources:
+- https://medium.com/pythoneers/getting-started-with-trees-in-python-a-beginners-guide-4e68818e7c05
+    - I used this because I already know how to make a tree data structure, I wanted to speed along. 
+
+- https://www.pcgbook.com/chapter03.pdf
