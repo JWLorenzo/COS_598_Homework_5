@@ -1,7 +1,7 @@
-from display import Display
+from Utility.display import Display
 import pygame
 from pygame.locals import *
-import CONSTANTS
+import Utility.CONSTANTS as CONSTANTS
 
 
 def initialize_game() -> Display:

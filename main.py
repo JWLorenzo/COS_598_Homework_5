@@ -1,6 +1,6 @@
 import random
-from initialize import initialize_game
-from gameloop import game_loop
+from Game.initialize import initialize_game
+from Game.gameloop import game_loop
 
 
 def main() -> None:

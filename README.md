@@ -26,9 +26,14 @@
         - We then effectively use a form of cellular automata to update the outer wall of the structure. In a 3x3 area, we know that if at least 1 of the tiles is empty, then it has to be a wall. 
         - Hopefully the randomness will mean that it's lumpy. 
 
+## Notes:
+- I decided to install mypy recently to improve my code quality and reduce bugs. That's why everything is statically typed.
+
 
 # Sources:
 - https://medium.com/pythoneers/getting-started-with-trees-in-python-a-beginners-guide-4e68818e7c05
     - I used this because I already know how to make a tree data structure, I wanted to speed along. 
 
 - https://www.pcgbook.com/chapter03.pdf
+
+- https://medium.com/@guribemontero/dungeon-generation-using-binary-space-trees-47d4a668e2d0

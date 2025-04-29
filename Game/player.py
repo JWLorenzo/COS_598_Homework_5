@@ -1,7 +1,7 @@
 import pygame
 import os
 from typing import Any
-from CONSTANTS import IMAGE_DIR, ALPHA, ANIMATION_CYCLE, PLAYER_SIZE
+from Utility.CONSTANTS import IMAGE_DIR, ALPHA, ANIMATION_CYCLE, PLAYER_SIZE
 
 
 class Player(pygame.sprite.Sprite):
