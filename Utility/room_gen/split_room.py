@@ -1,105 +1,204 @@
 from Utility.room_gen.room import Room
 import random
 from Utility.room_gen.tilearray import tileArray
+from Utility.CONSTANTS import TEST
 
 
 class split_room(Room):
     def __init__(
-        self, x_min: int, y_min: int, x_max: int, y_max: int, tile_array: tileArray
+        self, left: int, bottom: int, right: int, top: int, tile_array: tileArray
     ) -> None:
-        self.width_min: int = 8
-        self.width_max: int = 20
-        self.height_min: int = 8
-        self.height_max: int = 20
-        self.corridor_width: int = 2
+        super().__init__(left, bottom, right, top, tile_array)
+
+        self.minWidth: int = 8
+        self.maxWidth: int = 20
+        self.minHeight: int = 8
+        self.maxHeight: int = 20
+
+        self.corridor_Width: int = 2
+        self.corridor_Margin: int = 1
+        self.shrink: int = 1
+
         self.horizontal_split: bool = False
         self.vertical_split: bool = False
-        self.left: split_room | None = None
-        self.right: split_room | None = None
-        self.shrink: int = 1
-        super().__init__(x_min, y_min, x_max, y_max, tile_array)
 
-        if self.get_width() < self.width_min or self.get_height() < self.height_min:
+        self.left_Room: split_room | None = None
+        self.right_Room: split_room | None = None
+
+        if self.get_Width() < self.minWidth or self.get_Height() < self.minHeight:
             print(
-                f"Room too small ({self.get_width()}, {self.get_height()}) to split. "
-                f"Width min: {self.width_min}, Height min: {self.height_min}"
+                f"Room too small ({self.get_Width()}, {self.get_Height()}) to split. "
+                f"Width min: {self.minWidth}, Height min: {self.minHeight}"
             )
 
     def is_leaf(self) -> bool:
         return not self.horizontal_split and not self.vertical_split
 
     def split_horizontally(self) -> None:
-        if self.y_min + self.height_min >= self.y_max - self.height_min:
+        if self.get_Height() < (2 * self.minHeight):
             return
 
-        split_point = random.randint(
-            self.y_min + self.height_min, self.y_max - self.height_min
+        if (self.get_Bottom() + self.minHeight) > (self.get_Top() - self.minHeight):
+            return
+
+        split_point: int = 0
+        if not TEST:
+            split_point = random.randint(
+                self.get_Bottom() + self.minHeight, self.get_Top() - self.minHeight
+            )
+        else:
+            split_point = self.get_Bottom() + self.get_Height() // 2
+
+        self.left_Room = split_room(
+            self.get_Left(),
+            self.get_Bottom(),
+            self.get_Right(),
+            split_point,
+            self.tile_array,
         )
 
-        self.left = split_room(
-            self.x_min, self.y_min, self.x_max, split_point, self.tile_array
+        self.right_Room = split_room(
+            self.get_Left(),
+            split_point + 1,
+            self.get_Right(),
+            self.get_Top(),
+            self.tile_array,
         )
-
-        self.right = split_room(
-            self.x_min, split_point, self.x_max, self.y_max, self.tile_array
-        )
-        self.left.split()
-        self.right.split()
+        self.left_Room.split()
+        self.right_Room.split()
         self.horizontal_split = True
 
     def split_vertically(self) -> None:
-        if self.x_min + self.width_min >= self.x_max - self.width_min:
+        if self.get_Width() < (2 * self.minWidth):
             return
-        split_point = random.randint(
-            self.x_min + self.width_min, self.x_max - self.width_min
-        )
-        self.left = split_room(
-            self.x_min, self.y_min, split_point, self.y_max, self.tile_array
-        )
-        self.right = split_room(
-            split_point, self.y_min, self.x_max, self.y_max, self.tile_array
-        )
-        self.left.split()
-        self.right.split()
-        self.vertical_split = True
 
-    def create_room(self) -> None:
-        if self.is_leaf():
-            self.tile_array.carve_Area(
-                self.x_min, self.y_min, self.x_max, self.y_max, "#", "."
+        if (self.get_Left() + self.minWidth) > (self.get_Right() - self.minWidth):
+            return
+
+        split_point: int = 0
+        if not TEST:
+            split_point = random.randint(
+                self.get_Left() + self.minWidth, self.get_Right() - self.minWidth
             )
-            return
         else:
-            self.left.create_room()
-            self.right.create_room()
-            return
+            split_point = self.get_Left() + self.get_Width() // 2
+
+        self.left_Room = split_room(
+            self.get_Left(),
+            self.get_Bottom(),
+            split_point,
+            self.get_Top(),
+            self.tile_array,
+        )
+        self.right_Room = split_room(
+            split_point + 1,
+            self.get_Bottom(),
+            self.get_Right(),
+            self.get_Top(),
+            self.tile_array,
+        )
+        self.left_Room.split()
+        self.right_Room.split()
+        self.vertical_split = True
 
     def split(self) -> None:
         rand_value = random.random()
 
-        if rand_value < 0.5 and self.get_width() >= 2 * self.width_min:
-            self.split_horizontally()
-            return
-        elif self.get_height() >= 2 * self.height_min:
+        if rand_value < 0.5 and self.get_Width() >= 2 * self.minWidth:
             self.split_vertically()
             return
 
-        if self.get_height() > self.height_max:
+        elif self.get_Height() >= 2 * self.minHeight:
             self.split_horizontally()
             return
 
-        if self.get_width() > self.width_max:
+        if self.get_Width() > self.maxWidth:
             self.split_vertically()
             return
+
+        if self.get_Height() > self.maxHeight:
+            self.split_horizontally()
+            return
+
+    def create_room(self) -> None:
+        if self.is_leaf():
+            self.tile_array.carve_Area(
+                self.get_Left(),
+                self.get_Bottom(),
+                self.get_Right(),
+                self.get_Top(),
+                "#",
+                ".",
+            )
+        else:
+            self.left_Room.create_room()
+            self.right_Room.create_room()
 
     def shrink_room(self) -> None:
-        self.x_min += self.shrink
-        self.y_min += self.shrink
-        self.x_max -= self.shrink
-        self.y_max -= self.shrink
+        self.left += self.shrink
+        self.bottom += self.shrink
+        self.right -= self.shrink
+        self.top -= self.shrink
 
-        if self.left:
-            self.left.shrink_room()
-        if self.right:
-            self.right.shrink_room()
-        return
+        if self.left_Room:
+            self.left_Room.shrink_room()
+        if self.right_Room:
+            self.right_Room.shrink_room()
+
+    def get_Right_Positions(self) -> list[int]:
+        right_Connections: list[int] = []
+        if not self.is_leaf():
+            if self.right_Room:
+                right_Connections.extend(self.right_Room.get_Right_Positions())
+            if self.horizontal_split and self.left_Room:
+                right_Connections.extend(self.left_Room.get_Right_Positions())
+        else:
+            y: int = self.get_Bottom() + self.corridor_Margin
+            while y <= (self.get_Top() - self.corridor_Margin):
+                right_Connections.append(y)
+                y += 1
+        return right_Connections
+
+    def get_Left_Positions(self) -> list[int]:
+        left_Connections: list[int] = []
+        if not self.is_leaf():
+            if self.right_Room:
+                left_Connections.extend(self.right_Room.get_Left_Positions())
+            if self.horizontal_split and self.left_Room:
+                left_Connections.extend(self.left_Room.get_Left_Positions())
+        else:
+            y: int = self.get_Top() - self.corridor_Margin
+            while y >= (self.get_Bottom() + self.corridor_Margin):
+                left_Connections.append(y)
+                y -= 1
+        return left_Connections
+
+    def get_Top_Positions(self) -> list[int]:
+        top_Connections: list[int] = []
+
+        if not self.is_leaf():
+            if self.right_Room:
+                top_Connections.extend(self.right_Room.get_Top_Positions())
+            if self.vertical_split and self.left_Room:
+                top_Connections.extend(self.left_Room.get_Top_Positions())
+        else:
+            x: int = self.get_Left() + self.corridor_Margin
+            while x <= (self.get_Right() - self.corridor_Margin):
+                top_Connections.append(x)
+                x += 1
+        return top_Connections
+
+    def get_Bottom_Positions(self) -> list[int]:
+        bottom_Connections: list[int] = []
+
+        if not self.is_leaf():
+            if self.right_Room:
+                bottom_Connections.extend(self.right_Room.get_Bottom_Positions())
+            if self.vertical_split and self.left_Room:
+                bottom_Connections.extend(self.left_Room.get_Bottom_Positions())
+        else:
+            x: int = self.get_Right() - self.corridor_Margin
+            while x >= (self.get_Left() + self.corridor_Margin):
+                bottom_Connections.append(x)
+                x -= 1
+        return bottom_Connections

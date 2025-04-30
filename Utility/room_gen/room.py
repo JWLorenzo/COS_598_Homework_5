@@ -3,28 +3,28 @@ from Utility.room_gen.tilearray import tileArray
 
 class Room:
     def __init__(
-        self, x_min: int, y_min: int, x_max: int, y_max: int, tile_array: tileArray
+        self, left: int, bottom: int, right: int, top: int, tile_array: tileArray
     ) -> None:
-        self.x_min: int = x_min
-        self.y_min: int = y_min
-        self.x_max: int = x_max
-        self.y_max: int = y_max
+        self.left: int = left
+        self.bottom: int = bottom
+        self.right: int = right
+        self.top: int = top
         self.tile_array: tileArray = tile_array
 
-    def get_width(self) -> int:
-        return self.x_max - self.x_min
+    def get_Width(self) -> int:
+        return self.right - self.left + 1
 
-    def get_height(self) -> int:
-        return self.y_max - self.y_min
+    def get_Height(self) -> int:
+        return self.top - self.bottom + 1
 
-    def get_xmin(self) -> int:
-        return self.x_min
+    def get_Left(self) -> int:
+        return self.left
 
-    def get_ymin(self) -> int:
-        return self.y_min
+    def get_Bottom(self) -> int:
+        return self.bottom
 
-    def get_xmax(self) -> int:
-        return self.x_max
+    def get_Right(self) -> int:
+        return self.right
 
-    def get_ymax(self) -> int:
-        return self.y_max
+    def get_Top(self) -> int:
+        return self.top

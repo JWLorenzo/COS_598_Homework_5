@@ -23,11 +23,16 @@ def game_loop(display: Display) -> None:
 
     player_list: pygame.sprite.Group = pygame.sprite.Group()
     player_list.add(player)
-    tilemap: tileArray = tileArray(winw // TILE_SIZE, winh // TILE_SIZE)
-    root: split_room = split_room(0, 0, winw // TILE_SIZE, winh // TILE_SIZE, tilemap)
+    tilemap: tileArray = tileArray(winw // TILE_SIZE, winw // TILE_SIZE)
+    root: split_room = split_room(0, 0, winw // TILE_SIZE, winw // TILE_SIZE, tilemap)
     root.split()
     root.shrink_room()
     root.create_room()
+
+    print("Right", root.get_Right_Positions())
+    print("Left", root.get_Left_Positions())
+    print("Top", root.get_Top_Positions())
+    print("Bottom", root.get_Bottom_Positions())
     with open("tilemap.txt", "w") as f:
         for row in tilemap.tile_array:
             for column in row:
