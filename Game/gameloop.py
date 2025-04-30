@@ -29,10 +29,24 @@ def game_loop(display: Display) -> None:
     root.shrink_room()
     root.create_room()
 
-    print("Right", root.get_Right_Positions())
-    print("Left", root.get_Left_Positions())
-    print("Top", root.get_Top_Positions())
-    print("Bottom", root.get_Bottom_Positions())
+    right_test: list[int] = root.get_Right_Positions()
+    left_test: list[int] = root.get_Left_Positions()
+    top_test: list[int] = root.get_Top_Positions()
+    bottom_test: list[int] = root.get_Bottom_Positions()
+    common_lr_test: list[int] = root.get_Intersections(right_test, left_test)
+    corridor_coords_test: list[list[int]] = root.get_Position_Intersections_Groups(
+        common_lr_test
+    )
+    print("Right", right_test)
+    print("Left", left_test)
+
+    print("common", common_lr_test),
+
+    print("corridor coords", corridor_coords_test)
+
+    print("Top", top_test)
+    print("Bottom", bottom_test)
+
     with open("tilemap.txt", "w") as f:
         for row in tilemap.tile_array:
             for column in row:

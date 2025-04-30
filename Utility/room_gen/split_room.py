@@ -2,6 +2,8 @@ from Utility.room_gen.room import Room
 import random
 from Utility.room_gen.tilearray import tileArray
 from Utility.CONSTANTS import TEST
+import pygame
+from Utility.room_gen.corridor import Corridor
 
 
 class split_room(Room):
@@ -14,11 +16,6 @@ class split_room(Room):
         self.maxWidth: int = 20
         self.minHeight: int = 8
         self.maxHeight: int = 20
-
-        self.corridor_Width: int = 2
-        self.corridor_Margin: int = 1
-        self.shrink: int = 1
-
         self.horizontal_split: bool = False
         self.vertical_split: bool = False
 
@@ -131,6 +128,7 @@ class split_room(Room):
                 ".",
             )
         else:
+            assert self.left_Room is not None and self.right_Room is not None
             self.left_Room.create_room()
             self.right_Room.create_room()
 
@@ -202,3 +200,76 @@ class split_room(Room):
                 bottom_Connections.append(x)
                 x -= 1
         return bottom_Connections
+
+    def get_Intersections(self, points_A: list[int], points_B: list[int]) -> list[int]:
+        intersections = sorted(set(points_A) & set(points_B))
+        return intersections
+
+    def get_Position_Intersections_Groups(self, points: list[int]) -> list[list[int]]:
+        intersections: list[list[int]] = []
+
+        first_Iter: bool = True
+
+        current_Intersection: list[int] = [0, 0]
+        num: int = 0
+        for i in range(len(points)):
+            num = points[i]
+            if first_Iter or points[i - 1] != points[i] - 1:
+                if not first_Iter:
+                    intersections.append(current_Intersection)
+
+                first_Iter = False
+                current_Intersection = [num, num]
+            else:
+                current_Intersection[1] += 1
+        if not first_Iter:
+            intersections.append(current_Intersection)
+
+        return [
+            group
+            for group in intersections
+            if group[1] - group[0] >= self.minCorridorThickness
+        ]
+
+    def make_Corridor(self) -> None:
+        if self.is_leaf():
+            return
+
+        if self.left_Room:
+            self.left_Room.make_Corridor()
+        if self.right_Room:
+            self.right_Room.make_Corridor()
+
+        if self.left_Room and self.right_Room:
+            p: list[int] = []
+            groups: list[list[int]] = [[]]
+            positions: list[int] = []
+            corridor: Corridor | None = None
+            if self.vertical_split:
+                positions = self.get_Intersections(
+                    self.left_Room.get_Right_Positions(),
+                    self.right_Room.get_Left_Positions(),
+                )
+                groups = self.get_Position_Intersections_Groups(positions)
+                p = random.choice(groups)
+                corridor = Corridor(
+                    self.left_Room.get_Right() + 1,
+                    self.left_Room.get_Right() + 2,
+                    p[1],
+                    p[0],
+                    self.tile_array,
+                )
+            else:
+                positions = self.get_Intersections(
+                    self.left_Room.get_Bottom_Positions(),
+                    self.right_Room.get_Top_Positions(),
+                )
+                groups = self.get_Position_Intersections_Groups(positions)
+                p = random.choice(groups)
+                corridor = Corridor(
+                    p[0],
+                    p[1],
+                    self.left_Room.get_Bottom() - 1,
+                    self.left_Room.get_Bottom() - 2,
+                    self.tile_array,
+                )
