@@ -5,12 +5,15 @@ from Utility.CONSTANTS import TEST
 import pygame
 from Utility.room_gen.corridor import Corridor
 
+# We should change it to LRTP
+# Original was left, bottom, right, top
+
 
 class split_room(Room):
     def __init__(
-        self, left: int, bottom: int, right: int, top: int, tile_array: tileArray
+        self, left: int, right: int, top: int, bottom: int, tile_array: tileArray
     ) -> None:
-        super().__init__(left, bottom, right, top, tile_array)
+        super().__init__(left, right, top, bottom, tile_array)
 
         self.minWidth: int = 8
         self.maxWidth: int = 20
@@ -48,17 +51,17 @@ class split_room(Room):
 
         self.left_Room = split_room(
             self.get_Left(),
-            self.get_Bottom(),
             self.get_Right(),
             split_point,
+            self.get_Bottom(),
             self.tile_array,
         )
 
         self.right_Room = split_room(
             self.get_Left(),
-            split_point + 1,
             self.get_Right(),
             self.get_Top(),
+            split_point + 1,
             self.tile_array,
         )
         self.left_Room.split()
@@ -82,16 +85,16 @@ class split_room(Room):
 
         self.left_Room = split_room(
             self.get_Left(),
-            self.get_Bottom(),
             split_point,
             self.get_Top(),
+            self.get_Bottom(),
             self.tile_array,
         )
         self.right_Room = split_room(
             split_point + 1,
-            self.get_Bottom(),
             self.get_Right(),
             self.get_Top(),
+            self.get_Bottom(),
             self.tile_array,
         )
         self.left_Room.split()
@@ -121,9 +124,9 @@ class split_room(Room):
         if self.is_leaf():
             self.tile_array.carve_Area(
                 self.get_Left(),
-                self.get_Bottom(),
                 self.get_Right(),
                 self.get_Top(),
+                self.get_Bottom(),
                 "#",
                 ".",
             )
@@ -245,6 +248,7 @@ class split_room(Room):
             groups: list[list[int]] = [[]]
             positions: list[int] = []
             corridor: Corridor | None = None
+
             if self.vertical_split:
                 positions = self.get_Intersections(
                     self.left_Room.get_Right_Positions(),
@@ -258,6 +262,7 @@ class split_room(Room):
                     p[1],
                     p[0],
                     self.tile_array,
+                    "v",
                 )
             else:
                 positions = self.get_Intersections(
@@ -272,4 +277,5 @@ class split_room(Room):
                     self.left_Room.get_Bottom() - 1,
                     self.left_Room.get_Bottom() - 2,
                     self.tile_array,
+                    "h",
                 )

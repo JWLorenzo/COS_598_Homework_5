@@ -4,6 +4,16 @@ from Utility.room_gen.tilearray import tileArray
 
 class Corridor(Room):
     def __init__(
-        self, left: int, bottom: int, right: int, top: int, tile_array: tileArray
+        self,
+        left: int,
+        right: int,
+        top: int,
+        bottom: int,
+        tile_array: tileArray,
+        direction: str,
     ) -> None:
-        super().__init__(left, bottom, right, top, tile_array)
+        self.direction: str = direction
+        super().__init__(left, right, top, bottom, tile_array)
+        tile_array.carve_Corridor(
+            self.left, self.right, self.top, self.bottom, "|", "_", self.direction
+        )

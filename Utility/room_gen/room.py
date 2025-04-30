@@ -3,7 +3,7 @@ from Utility.room_gen.tilearray import tileArray
 
 class Room:
     def __init__(
-        self, left: int, bottom: int, right: int, top: int, tile_array: tileArray
+        self, left: int, right: int, top: int, bottom: int, tile_array: tileArray
     ) -> None:
         self.left: int = left
         self.bottom: int = bottom

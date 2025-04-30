@@ -24,7 +24,7 @@ def game_loop(display: Display) -> None:
     player_list: pygame.sprite.Group = pygame.sprite.Group()
     player_list.add(player)
     tilemap: tileArray = tileArray(winw // TILE_SIZE, winw // TILE_SIZE)
-    root: split_room = split_room(0, 0, winw // TILE_SIZE, winw // TILE_SIZE, tilemap)
+    root: split_room = split_room(0, winw // TILE_SIZE, winw // TILE_SIZE, 0, tilemap)
     root.split()
     root.shrink_room()
     root.create_room()
@@ -46,6 +46,8 @@ def game_loop(display: Display) -> None:
 
     print("Top", top_test)
     print("Bottom", bottom_test)
+
+    root.make_Corridor()
 
     with open("tilemap.txt", "w") as f:
         for row in tilemap.tile_array:
