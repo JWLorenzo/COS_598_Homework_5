@@ -10,52 +10,34 @@ class tileArray:
         ]
 
     def carve_Area(
-        self, left: int, right: int, top: int, bottom: int, wall: str, floor: str
+        self, x_min: int, x_max: int, y_min: int, y_max: int, wall: str, floor: str
     ) -> None:
 
-        column: int = left
-        while column <= right:
-            row: int = bottom
-            while row <= top:
-                edge_row: bool = row == bottom or row == top
-                edge_column: bool = column == right or column == left
+        column: int = x_min
+        while column < x_max:
+            row: int = y_min
+            while row < y_max:
+                edge_row: bool = row == y_min or row == y_max - 1
+                edge_column: bool = column == x_max - 1 or column == x_min
                 if edge_row or edge_column:
-                    self.tile_array[row][column] = wall
+                    if self.tile_array[row][column] != floor:
+                        self.tile_array[row][column] = wall
                 else:
                     self.tile_array[row][column] = floor
                 row += 1
             column += 1
 
-    def carve_Corridor(
-        self,
-        left: int,
-        right: int,
-        top: int,
-        bottom: int,
-        wall: str,
-        floor: str,
-        direction: str,
-    ) -> None:
-
-        column: int = left
-        while column <= right:
-            row: int = bottom
-            while row <= top:
-                edge_row: bool = row == bottom or row == top
-                edge_column: bool = column == right or column == left
-
-                if direction == "v":
-                    if edge_row:
-                        self.tile_array[row][column] = wall
+    def create_Corridors(self,path_List:list[tuple[tuple[int, int], tuple[int, int],str]])->None:
+        for i in path_List:
+            print("New Path",i)
+            for x in range(min(i[0][0],i[1][0]),max(i[0][0],i[1][0])+1):
+                for y in range(min(i[0][1], i[1][1]), max(i[0][1], i[1][1]) + 1):
+                    if i[2] == "h":
+                        self.tile_array[y][x] = "|"
+                        self.tile_array[y][x-1] = "#"
+                        self.tile_array[y][x+1] = "#"
                     else:
-                        self.tile_array[row][column] = floor
-                elif direction == "h":
-                    if edge_column:
-                        self.tile_array[row][column] = wall
-                    else:
-                        self.tile_array[row][column] = floor
-                else:
-                    self.tile_array[row][column] = floor
-
-                row += 1
-            column += 1
+                        self.tile_array[y][x] = "-"
+                        self.tile_array[y-1][x] = "#"
+                        self.tile_array[y+1][x] = "#"
+                    print((x,y))

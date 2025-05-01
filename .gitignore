@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Jacob Stuff
+.idea
+
 # Distribution / packaging
 .Python
 build/

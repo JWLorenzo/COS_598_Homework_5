@@ -12,7 +12,7 @@ from Utility.CONSTANTS import (
 import os
 from Utility.level import Level
 from Utility.room_gen.tilearray import tileArray
-from Utility.room_gen.split_room import split_room
+from Utility.room_gen.room_node import Node
 
 
 def game_loop(display: Display) -> None:
@@ -32,31 +32,11 @@ def game_loop(display: Display) -> None:
     player_list: pygame.sprite.Group = pygame.sprite.Group()
     player_list.add(player)
     tilemap: tileArray = tileArray(winw // TILE_SIZE, winw // TILE_SIZE)
-    root: split_room = split_room(0, winw // TILE_SIZE, winw // TILE_SIZE, 0, tilemap)
-    root.split()
-    root.shrink_room()
-    root.create_room()
-    root.make_Corridor()
-
-    if TEST:
-        right_test: list[int] = root.get_Right_Positions()
-        left_test: list[int] = root.get_Left_Positions()
-        top_test: list[int] = root.get_Top_Positions()
-        bottom_test: list[int] = root.get_Bottom_Positions()
-        common_lr_test: list[int] = root.get_Intersections(right_test, left_test)
-        corridor_coords_test: list[list[int]] = root.get_Position_Intersections_Groups(
-            common_lr_test
-        )
-        print("Right", right_test)
-        print("Left", left_test)
-
-        print("common", common_lr_test),
-
-        print("corridor coords", corridor_coords_test)
-
-        print("Top", top_test)
-        print("Bottom", bottom_test)
-
+    root: Node = Node(0, winw // TILE_SIZE, 0, winw // TILE_SIZE, tilemap)
+    root.create_Dungeon()
+    root.trim_Rooms()
+    root.tile_array.create_Corridors(root.get_corridors())
+    root.carve_Dungeon()
     with open("tilemap.txt", "w") as f:
         for row in tilemap.tile_array:
             for column in row:
