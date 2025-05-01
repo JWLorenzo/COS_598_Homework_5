@@ -10,7 +10,6 @@ class Room:
         self.right: int = right
         self.top: int = top
         self.tile_array: tileArray = tile_array
-        self.corridor_Width: int = 2
         self.corridor_Margin: int = 1
         self.shrink: int = 1
         self.minCorridorThickness: int = 2

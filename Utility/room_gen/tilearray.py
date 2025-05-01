@@ -10,38 +10,52 @@ class tileArray:
         ]
 
     def carve_Area(
-        self, x_min: int, x_max: int, y_max: int, y_min: int, wall: str, floor: str
+        self, left: int, right: int, top: int, bottom: int, wall: str, floor: str
     ) -> None:
-        for row in range(y_min, y_max):
-            for column in range(x_min, x_max):
-                if (row == y_max - 1 or row == y_min) or (
-                    column == x_max - 1 or column == x_min
-                ):
+
+        column: int = left
+        while column <= right:
+            row: int = bottom
+            while row <= top:
+                edge_row: bool = row == bottom or row == top
+                edge_column: bool = column == right or column == left
+                if edge_row or edge_column:
                     self.tile_array[row][column] = wall
                 else:
                     self.tile_array[row][column] = floor
+                row += 1
+            column += 1
 
     def carve_Corridor(
         self,
-        x_min: int,
-        x_max: int,
-        y_max: int,
-        y_min: int,
+        left: int,
+        right: int,
+        top: int,
+        bottom: int,
         wall: str,
         floor: str,
         direction: str,
     ) -> None:
-        for row in range(y_min, y_max):
-            for column in range(x_min, x_max):
-                if (row == y_max - 1 or row == y_min) or (
-                    column == x_max - 1 or column == x_min
-                ):
-                    if direction == "h" and row in range(y_min + 1, y_max - 2):
-                        self.tile_array[row][column] = floor
-                    elif direction == "v" and column in range(x_min + 1, x_max - 2):
-                        self.tile_array[row][column] = floor
-                    else:
-                        self.tile_array[row][column] = wall
 
+        column: int = left
+        while column <= right:
+            row: int = bottom
+            while row <= top:
+                edge_row: bool = row == bottom or row == top
+                edge_column: bool = column == right or column == left
+
+                if direction == "v":
+                    if edge_row:
+                        self.tile_array[row][column] = wall
+                    else:
+                        self.tile_array[row][column] = floor
+                elif direction == "h":
+                    if edge_column:
+                        self.tile_array[row][column] = wall
+                    else:
+                        self.tile_array[row][column] = floor
                 else:
                     self.tile_array[row][column] = floor
+
+                row += 1
+            column += 1

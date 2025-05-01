@@ -168,10 +168,10 @@ class split_room(Room):
             if self.horizontal_split and self.left_Room:
                 left_Connections.extend(self.left_Room.get_Left_Positions())
         else:
-            y: int = self.get_Top() - self.corridor_Margin
-            while y >= (self.get_Bottom() + self.corridor_Margin):
+            y: int = self.get_Bottom() + self.corridor_Margin
+            while y <= (self.get_Top() - self.corridor_Margin):
                 left_Connections.append(y)
-                y -= 1
+                y += 1
         return left_Connections
 
     def get_Top_Positions(self) -> list[int]:
@@ -198,10 +198,10 @@ class split_room(Room):
             if self.vertical_split and self.left_Room:
                 bottom_Connections.extend(self.left_Room.get_Bottom_Positions())
         else:
-            x: int = self.get_Right() - self.corridor_Margin
-            while x >= (self.get_Left() + self.corridor_Margin):
+            x: int = self.get_Left() + self.corridor_Margin
+            while x <= (self.get_Right() - self.corridor_Margin):
                 bottom_Connections.append(x)
-                x -= 1
+                x += 1
         return bottom_Connections
 
     def get_Intersections(self, points_A: list[int], points_B: list[int]) -> list[int]:
@@ -217,7 +217,7 @@ class split_room(Room):
         num: int = 0
         for i in range(len(points)):
             num = points[i]
-            if first_Iter or points[i - 1] != points[i] - 1:
+            if first_Iter or (points[i - 1] != points[i] - 1):
                 if not first_Iter:
                     intersections.append(current_Intersection)
 
@@ -231,7 +231,7 @@ class split_room(Room):
         return [
             group
             for group in intersections
-            if group[1] - group[0] >= self.minCorridorThickness
+            if (group[1] - group[0]) >= self.minCorridorThickness
         ]
 
     def make_Corridor(self) -> None:

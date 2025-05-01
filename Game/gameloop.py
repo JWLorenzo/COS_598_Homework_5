@@ -1,6 +1,14 @@
 from Utility.display import *
 from Game.player import Player
-from Utility.CONSTANTS import FPS, IMAGE_DIR, WORLD_X, WORLD_Y, TILE_SIZE, RUN_GAME
+from Utility.CONSTANTS import (
+    FPS,
+    IMAGE_DIR,
+    WORLD_X,
+    WORLD_Y,
+    TILE_SIZE,
+    RUN_GAME,
+    TEST,
+)
 import os
 from Utility.level import Level
 from Utility.room_gen.tilearray import tileArray
@@ -28,26 +36,26 @@ def game_loop(display: Display) -> None:
     root.split()
     root.shrink_room()
     root.create_room()
-
-    right_test: list[int] = root.get_Right_Positions()
-    left_test: list[int] = root.get_Left_Positions()
-    top_test: list[int] = root.get_Top_Positions()
-    bottom_test: list[int] = root.get_Bottom_Positions()
-    common_lr_test: list[int] = root.get_Intersections(right_test, left_test)
-    corridor_coords_test: list[list[int]] = root.get_Position_Intersections_Groups(
-        common_lr_test
-    )
-    print("Right", right_test)
-    print("Left", left_test)
-
-    print("common", common_lr_test),
-
-    print("corridor coords", corridor_coords_test)
-
-    print("Top", top_test)
-    print("Bottom", bottom_test)
-
     root.make_Corridor()
+
+    if TEST:
+        right_test: list[int] = root.get_Right_Positions()
+        left_test: list[int] = root.get_Left_Positions()
+        top_test: list[int] = root.get_Top_Positions()
+        bottom_test: list[int] = root.get_Bottom_Positions()
+        common_lr_test: list[int] = root.get_Intersections(right_test, left_test)
+        corridor_coords_test: list[list[int]] = root.get_Position_Intersections_Groups(
+            common_lr_test
+        )
+        print("Right", right_test)
+        print("Left", left_test)
+
+        print("common", common_lr_test),
+
+        print("corridor coords", corridor_coords_test)
+
+        print("Top", top_test)
+        print("Bottom", bottom_test)
 
     with open("tilemap.txt", "w") as f:
         for row in tilemap.tile_array:
