@@ -8,9 +8,12 @@ class tileArray:
         self.floor: str = " "
         self.wall: str = "#"
         self.door: str = "@"
-        self.empty: str = "+"
+        self.empty: str = " "
         self.corridor_v: str = "|"
         self.corridor_h: str = "-"
+        self.wall_v: str = "]"
+        self.wall_h: str = "_"
+        self.dungeon_endcap: str = "!"
         self.tile_array: list[list[str]] = [
             [self.empty for column in range(self.map_width)]
             for row in range(self.map_height)
@@ -21,16 +24,20 @@ class tileArray:
         h_range: list[int] = list(range(self.map_height))
         for row in range(y_min, y_max):
             for column in range(x_min, x_max):
-                north, south, east, west, northeast, northwest, southeast, southwest = (
-                    self.get_directions(row, column, w_range, h_range)
-                )
+                # north, south, east, west, northeast, northwest, southeast, southwest = (
+                #     self.get_directions(row, column, w_range, h_range)
+                # )
                 if column in [x_min, x_max - 1] or row in [y_min, y_max - 1]:
-                    if self.tile_array[row][column] in [
+                    # if self.tile_array[row][column] in [
+                    #     self.corridor_v,
+                    #     self.corridor_h,
+                    # ]:
+                    #     self.tile_array[row][column] = self.floor
+                    # else:
+                    if self.tile_array[row][column] not in [
                         self.corridor_v,
                         self.corridor_h,
                     ]:
-                        self.tile_array[row][column] = self.floor
-                    else:
                         self.tile_array[row][column] = self.wall
                 else:
                     self.tile_array[row][column] = self.floor
@@ -43,12 +50,32 @@ class tileArray:
                 for i in range(path[1][0] - path[0][0]):
                     # print("hori", i)
                     # print(f"x: {path[0][0] + i}, y: {path[1][1]}")
-                    self.tile_array[path[1][1]][path[0][0] + i] = self.corridor_h
+                    if self.tile_array[path[1][1]][path[0][0] + i] not in [
+                        self.corridor_v,
+                        self.corridor_h,
+                    ]:
+                        self.tile_array[path[1][1]][path[0][0] + i] = self.corridor_h
+                    if self.tile_array[path[1][1] - 1][path[0][0] + i] not in [
+                        self.corridor_v,
+                        self.corridor_h,
+                    ]:
+                        self.tile_array[path[1][1] - 1][
+                            path[0][0] + i
+                        ] = self.corridor_h
+                    if self.tile_array[path[1][1] + 1][path[0][0] + i] not in [
+                        self.corridor_v,
+                        self.corridor_h,
+                    ]:
+                        self.tile_array[path[1][1] + 1][
+                            path[0][0] + i
+                        ] = self.corridor_h
             else:
                 for i in range(path[1][1] - path[0][1]):
                     # print("vert", i)
                     # print(f"x: {path[0][0]}, y: {path[0][1] + i}")
                     self.tile_array[path[0][1] + i][path[0][0]] = self.corridor_v
+                    self.tile_array[path[0][1] + i][path[0][0] - 1] = self.corridor_v
+                    self.tile_array[path[0][1] + i][path[0][0] + 1] = self.corridor_v
 
     def get_directions(
         self, row: int, column: int, w_range: list[int], h_range: list[int]
@@ -128,8 +155,3 @@ class tileArray:
         #     for column in range(self.map_width):
         #         if self.tile_array[row][column] in [self.corridor_h, self.corridor_v]:
         #             self.tile_array[row][column] = self.floor
-
-    def draw_corridor(self, min_x: int, max_x: int, min_y: int, max_y: int) -> None:
-        for row in range(min_y, max_y):
-            for column in range(min_x, max_x):
-                self.tile_array[row][column] = "%"

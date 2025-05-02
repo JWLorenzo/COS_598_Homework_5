@@ -34,14 +34,12 @@ def game_loop(display: Display) -> None:
     tilemap: tileArray = tileArray(60, 50)
     root: Node = Node(0, 60, 0, 50, tilemap)
     root.create_Dungeon()
+    corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
+
+    root.trim_Rooms()
+    root.tile_array.create_Corridors(corridors)
+
     root.carve_Dungeon()
-    root.get_right_connections()
-    root.get_left_connections()
-    root.get_top_connections()
-    root.get_bottom_connections()
-    root.add_corridors()
-    # corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
-    # root.tile_array.create_Corridors(corridors)
 
     # root.tile_array.dungeon_cleanup()
 

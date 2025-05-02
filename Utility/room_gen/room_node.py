@@ -27,7 +27,6 @@ class Node:
         self.corridor_margin: int = 2
 
         self.min_corridor_thickness: int = 3
-        self.wilted: bool = False
 
     def get_Center(self) -> tuple[int, int]:
 
@@ -37,9 +36,7 @@ class Node:
         )
 
     def is_Leaf(self):
-        return ((self.left == None) or self.left.wilted) and (
-            (self.right == None) or self.right.wilted
-        )
+        return (self.left == None) and (self.right == None)
 
     def get_Width(self):
         return self.max_x - self.min_x
@@ -86,7 +83,6 @@ class Node:
             if self.get_Height() > 2 * self.min_height:
                 self.split_Hori()
                 return
-            self.wilted = True
             return
 
         if (
@@ -156,133 +152,3 @@ class Node:
             print(f"Corridor: left: {left_center} right: {right_center}")
             corridors.append((left_center, right_center))
         return corridors
-
-    def get_right_connections(self) -> list[int]:
-        connections: list[int] = []
-        if not self.is_Leaf():
-            if self.right:
-
-                connections.extend(self.right.get_right_connections())
-            if self.left and self.split_dir == "h":
-                connections.extend(self.left.get_right_connections())
-        else:
-            for y in range(
-                self.min_y + self.corridor_margin - 1,
-                self.max_y - self.corridor_margin + 1,
-            ):
-                connections.append(y)
-                # self.tile_array.tile_array[y][self.max_x - 1] = "E"
-        return connections
-
-    def get_left_connections(self) -> list[int]:
-        connections: list[int] = []
-        if not self.is_Leaf():
-            if self.left:
-                connections.extend(self.left.get_left_connections())
-            if self.right and self.split_dir == "h":
-                connections.extend(self.right.get_left_connections())
-        else:
-            for y in range(
-                self.min_y + self.corridor_margin - 1,
-                self.max_y - self.corridor_margin + 1,
-            ):
-                connections.append(y)
-                # self.tile_array.tile_array[y][self.min_x] = "W"
-        return connections
-
-    def get_top_connections(self) -> list[int]:
-        connections: list[int] = []
-        if not self.is_Leaf():
-            if self.left:
-                connections.extend(self.left.get_top_connections())
-            if self.right and self.split_dir == "v":
-                connections.extend(self.right.get_top_connections())
-        else:
-            for x in range(
-                self.min_x + self.corridor_margin - 1,
-                self.max_x - self.corridor_margin + 1,
-            ):
-                connections.append(x)
-                # self.tile_array.tile_array[self.min_y][x] = "N"
-        return connections
-
-    def get_bottom_connections(self) -> list[int]:
-        connections: list[int] = []
-        if not self.is_Leaf():
-            if self.right:
-                connections.extend(self.right.get_bottom_connections())
-            if self.left and self.split_dir == "v":
-                connections.extend(self.left.get_bottom_connections())
-        else:
-            for x in range(
-                self.min_x + self.corridor_margin - 1,
-                self.max_x - self.corridor_margin + 1,
-            ):
-                connections.append(x)
-                # self.tile_array.tile_array[self.max_y - 1][x] = "S"
-        return connections
-
-    def get_intersection_groups(
-        self, group_a: list[int], group_b: list[int]
-    ) -> list[int]:
-        return sorted(set(group_a) & set(group_b))
-
-    def get_connection_groups(self, points: list[int]) -> list[list[int]]:
-        groups: list[list[int]] = []
-
-        first_iteration: bool = True
-
-        current_group: list[int] = [0, 0]
-
-        for i in range(len(points)):
-            num: int = points[i]
-
-            if first_iteration or points[i - 1] != points[i] - 1:
-                if not first_iteration:
-                    groups.append(current_group)
-
-                first_iteration = False
-                current_group = [num, num]
-            else:
-                current_group[1] += 1
-
-        if not first_iteration:
-            groups.append(current_group)
-
-        return [g for g in groups if g[1] - g[0] >= self.min_corridor_thickness]
-
-    def add_corridors(self) -> None:
-        positions: list[int] = []
-        groups: list[list[int]] = []
-        p: list[int] = []
-        q: int = 0
-        if self.is_Leaf():
-            return
-
-        if self.left:
-            self.left.add_corridors()
-        if self.right:
-            self.right.add_corridors()
-
-        if self.left and self.right:
-            if self.split_dir == "v":
-                positions = self.get_intersection_groups(
-                    self.left.get_right_connections(), self.right.get_left_connections()
-                )
-                groups = self.get_connection_groups(positions)
-
-                p = random.choice(groups)
-                q = random.randrange(p[0], p[1])
-                self.tile_array.draw_corridor(
-                    self.left.max_x - 1, self.left.max_x + 1, p[0], p[1]
-                )
-            else:
-                positions = self.get_intersection_groups(
-                    self.left.get_bottom_connections(), self.right.get_top_connections()
-                )
-                groups = self.get_connection_groups(positions)
-                p = random.choice(groups)
-                q = random.randrange(p[0], p[1])
-                self.tile_array.draw_corridor(
-                    p[0], p[1], self.left.min_y - 1, self.left.min_y + 1
-                )
