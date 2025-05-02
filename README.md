@@ -32,8 +32,9 @@
 
 # Sources:
 - https://medium.com/pythoneers/getting-started-with-trees-in-python-a-beginners-guide-4e68818e7c05
-    - I used this because I already know how to make a tree data structure, I wanted to speed along. 
 
 - https://www.pcgbook.com/chapter03.pdf
 
 - https://medium.com/@guribemontero/dungeon-generation-using-binary-space-trees-47d4a668e2d0
+
+- https://jonoshields.com/post/bsp-dungeon

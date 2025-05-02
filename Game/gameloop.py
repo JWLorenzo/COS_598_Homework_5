@@ -31,17 +31,26 @@ def game_loop(display: Display) -> None:
 
     player_list: pygame.sprite.Group = pygame.sprite.Group()
     player_list.add(player)
-    tilemap: tileArray = tileArray(winw // TILE_SIZE, winw // TILE_SIZE)
-    root: Node = Node(0, winw // TILE_SIZE, 0, winw // TILE_SIZE, tilemap)
+    tilemap: tileArray = tileArray(60, 50)
+    root: Node = Node(0, 60, 0, 50, tilemap)
     root.create_Dungeon()
-    root.trim_Rooms()
-    root.tile_array.create_Corridors(root.get_corridors())
     root.carve_Dungeon()
+    root.get_right_connections()
+    root.get_left_connections()
+    root.get_top_connections()
+    root.get_bottom_connections()
+    root.add_corridors()
+    # corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
+    # root.tile_array.create_Corridors(corridors)
+
+    # root.tile_array.dungeon_cleanup()
+
     with open("tilemap.txt", "w") as f:
-        for row in tilemap.tile_array:
-            for column in row:
-                f.write(column)
-            f.write("\n")
+        for row in range(len(tilemap.tile_array)):
+            for column in range(len(tilemap.tile_array[row])):
+                f.write(tilemap.tile_array[row][column])
+            if row != len(tilemap.tile_array) - 1:
+                f.write("\n")
     """
     MAIN LOOP
     """
