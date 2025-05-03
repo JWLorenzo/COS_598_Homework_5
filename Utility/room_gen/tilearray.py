@@ -49,21 +49,6 @@ class tileArray:
                 else:
                     self.tile_array[row][column] = self.floor
 
-    def create_Corridors(
-        self, path_List: list[tuple[tuple[int, int], tuple[int, int]]]
-    ) -> None:
-        for path in path_List:
-            if path[0][1] == path[1][1]:
-                for i in range(path[1][0] - path[0][0]):
-                    if self.tile_array[path[1][1]][path[0][0] + i] not in [
-                        self.corridor_v,
-                        self.corridor_h,
-                    ]:
-                        self.tile_array[path[1][1]][path[0][0] + i] = self.corridor_h
-            else:
-                for i in range(path[1][1] - path[0][1]):
-                    self.tile_array[path[0][1] + i][path[0][0]] = self.corridor_v
-
     def get_directions(
         self, row: int, column: int, w_range: list[int], h_range: list[int]
     ) -> tuple[str, str, str, str, str, str, str, str]:
@@ -94,6 +79,118 @@ class tileArray:
             else ""
         )
         return north, south, east, west, northeast, northwest, southeast, southwest
+
+    def cleanup_Area(self) -> None:
+        w_range: list[int] = list(range(self.map_width))
+        h_range: list[int] = list(range(self.map_height))
+
+        for row in range(self.map_height):
+            for column in range(self.map_width):
+                (
+                    north,
+                    south,
+                    east,
+                    west,
+                    northeast,
+                    northwest,
+                    southeast,
+                    southwest,
+                ) = self.get_directions(row, column, w_range, h_range)
+                if self.tile_array[row][column] in [self.corridor_v, self.corridor_h]:
+                    self.tile_array[row][column] = self.wall
+                elif not (self.tile_array[row][column] == self.wall):
+                    if not (
+                        (north == self.wall and south == self.wall)
+                        or (east == self.wall and west == self.wall)
+                    ):
+                        self.tile_array[row][column] = self.floor
+        for row in range(self.map_height):
+            print("performing clean up")
+            for column in range(self.map_width):
+                (
+                    north,
+                    south,
+                    east,
+                    west,
+                    northeast,
+                    northwest,
+                    southeast,
+                    southwest,
+                ) = self.get_directions(row, column, w_range, h_range)
+
+                if self.tile_array[row][column] == self.wall:
+                    # right wall
+                    if all(
+                        [
+                            self.path not in [north, south],
+                            east == self.floor,
+                        ]
+                    ) or all(
+                        [
+                            east in [self.wall, self.door],
+                            west == "",
+                            north in [self.wall, self.walll],
+                            south in [self.wall, self.walll],
+                        ]
+                    ):
+                        self.tile_array[row][column] = self.walll
+                    # left wall
+
+                    elif all(
+                        [
+                            self.path not in [north, south],
+                            west == self.floor,
+                        ]
+                    ) or all(
+                        [
+                            west in [self.wall, self.door],
+                            east == "",
+                            north in [self.wall, self.wallr],
+                            south in [self.wall, self.wallr],
+                        ]
+                    ):
+                        self.tile_array[row][column] = self.wallr
+
+        for row in range(self.map_height):
+            print("performing clean up")
+            for column in range(self.map_width):
+                (
+                    north,
+                    south,
+                    east,
+                    west,
+                    northeast,
+                    northwest,
+                    southeast,
+                    southwest,
+                ) = self.get_directions(row, column, w_range, h_range)
+
+                if all(
+                    [east == self.wall, south == self.walll, north in [self.walll, ""]]
+                ):
+                    print("tr corner")
+                    self.tile_array[row][column] = self.walll
+
+                if all(
+                    [west == self.wall, south == self.wallr, north in [self.wallr, ""]]
+                ):
+                    print("tr corner")
+                    self.tile_array[row][column] = self.wallr
+
+    def create_Corridors(
+        self, path_List: list[tuple[tuple[int, int], tuple[int, int]]]
+    ) -> None:
+        for path in path_List:
+            if path[0][1] == path[1][1]:
+                for i in range(path[1][0] - path[0][0]):
+                    if self.tile_array[path[1][1]][path[0][0] + i] not in [
+                        self.corridor_v,
+                        self.corridor_h,
+                    ]:
+                        self.tile_array[path[1][1]][path[0][0] + i] = self.corridor_h
+            else:
+                for i in range(path[1][1] - path[0][1]):
+                    self.tile_array[path[0][1] + i][path[0][0]] = self.corridor_v
 
     def vertical_corridors(
         self, iter_list: list[list[list[int]]], max: int, min: int

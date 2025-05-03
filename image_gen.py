@@ -16,7 +16,8 @@ def generate_Dungeon(width: int, height: int) -> None:
     path = root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])
     for i in path:
         root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.path
-    root.carve_Dungeon()
+
+    root.clean_Dungeon()
 
     with open("tilemap.txt", "w") as f:
         for row in range(len(tilemap.tile_array)):

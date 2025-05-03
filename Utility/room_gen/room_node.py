@@ -133,47 +133,18 @@ class Node:
         if self.right:
             self.right.carve_Dungeon()
 
+    def clean_Dungeon(self) -> None:
+        self.tile_array.cleanup_Area()
+
     def trim_Rooms(self) -> None:
         if self.is_Leaf():
-            # trim_min_x: int = self.min_x + random.randint(
-            #     self.trim_amount, self.trim_amount + 1
-            # )
-            # trim_max_x: int = self.max_x - random.randint(
-            #     self.trim_amount, self.trim_amount + 1
-            # )
-            # trim_min_y: int = self.min_y + random.randint(
-            #     self.trim_amount, self.trim_amount + 1
-            # )
-            # trim_max_y: int = self.max_y - random.randint(
-            #     self.trim_amount, self.trim_amount + 1
-            # )
             self.min_x += self.trim_amount
             self.max_x -= self.trim_amount
             self.min_y += self.trim_amount
             self.max_y -= self.trim_amount
 
-            print(
-                f"Rectangle created at: (x_1 {self.min_x} y_1 {self.min_y}), (x_2 {self.max_x}, y_2 {self.max_y})"
-            )
         if self.left:
             self.left.trim_Rooms()
 
         if self.right:
             self.right.trim_Rooms()
-
-    # def get_corridors(self) -> list[tuple[tuple[int, int], tuple[int, int]]]:
-    #     corridors: list[tuple[tuple[int, int], tuple[int, int]]] = []
-
-    #     if self.left:
-    #         corridors += self.left.get_corridors()
-
-    #     if self.right:
-    #         corridors += self.right.get_corridors()
-
-    #     if (self.left) and (self.right) and self.split_dir == "h":
-    #         left_center: tuple[int, int] = self.left.get_Center()
-    #         right_center: tuple[int, int] = self.right.get_Center()
-
-    #         print(f"Corridor: left: {left_center} right: {right_center}")
-    #         corridors.append((left_center, right_center))
-    #     return corridors

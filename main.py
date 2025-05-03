@@ -1,6 +1,3 @@
-# import random
-# from Game.initialize import initialize_game
-# from Game.gameloop import game_loop
 from image_gen import generate_Dungeon
 
 
