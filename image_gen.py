@@ -37,6 +37,10 @@ def generate_dungeon_image(tile_map: tileArray) -> None:
         tile_map.path: Image.open("game_images/Dungeon_Tiles/final/D.jpg"),
         tile_map.walll: Image.open("game_images/Dungeon_Tiles/final/WVL.jpg"),
         tile_map.wallr: Image.open("game_images/Dungeon_Tiles/final/WVR.jpg"),
+        tile_map.pillarl: Image.open("game_images/Dungeon_Tiles/final/PL.jpg"),
+        tile_map.pillarr: Image.open("game_images/Dungeon_Tiles/final/PR.jpg"),
+        tile_map.cornerr: Image.open("game_images/Dungeon_Tiles/final/WCR.jpg"),
+        tile_map.cornerl: Image.open("game_images/Dungeon_Tiles/final/WCL.jpg"),
     }
 
     width, height = tiles["#"].size
