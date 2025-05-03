@@ -34,14 +34,16 @@ def game_loop(display: Display) -> None:
     tilemap: tileArray = tileArray(60, 50)
     root: Node = Node(0, 60, 0, 50, tilemap)
     root.create_Dungeon()
-    corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
+    # corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
 
-    root.trim_Rooms()
-    root.tile_array.create_Corridors(corridors)
+    # root.trim_Rooms()
+    # root.tile_array.create_Corridors(corridors)
 
     root.carve_Dungeon()
-
+    root.tile_array.iterative_doors()
     # root.tile_array.dungeon_cleanup()
+
+    print(root.get_leaf_centers())
 
     with open("tilemap.txt", "w") as f:
         for row in range(len(tilemap.tile_array)):

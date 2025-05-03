@@ -29,11 +29,22 @@ class Node:
         self.min_corridor_thickness: int = 3
 
     def get_Center(self) -> tuple[int, int]:
-
         return (
             (self.max_x + self.min_x) // 2,
             (self.max_y + self.min_y) // 2,
         )
+
+    def get_Endpoint_North(self) -> tuple[int, int]:
+        return ((self.max_x + self.min_x) // 2, self.max_y)
+
+    def get_Endpoint_South(self) -> tuple[int, int]:
+        return ((self.max_x + self.min_x) // 2, self.min_y)
+
+    def get_Endpoint_East(self) -> tuple[int, int]:
+        return (self.max_x, (self.max_y + self.min_y) // 2)
+
+    def get_Endpoint_West(self) -> tuple[int, int]:
+        return (self.min_x, (self.max_y + self.min_y) // 2)
 
     def is_Leaf(self):
         return (self.left == None) and (self.right == None)
@@ -43,6 +54,20 @@ class Node:
 
     def get_Height(self):
         return self.max_y - self.min_y
+
+    def get_leaf_centers(self) -> list[tuple[int, int]]:
+        leaf_list: list[tuple[int, int]] = []
+
+        if self.is_Leaf():
+            return [self.get_Center()]
+
+        if self.left:
+            leaf_list.extend(self.left.get_leaf_centers())
+
+        if self.right:
+            leaf_list.extend(self.right.get_leaf_centers())
+
+        return leaf_list
 
     def split_Vert(self):
         split_Point_x = random.randint(
@@ -136,19 +161,19 @@ class Node:
         if self.right:
             self.right.trim_Rooms()
 
-    def get_corridors(self) -> list[tuple[tuple[int, int], tuple[int, int]]]:
-        corridors: list[tuple[tuple[int, int], tuple[int, int]]] = []
+    # def get_corridors(self) -> list[tuple[tuple[int, int], tuple[int, int]]]:
+    #     corridors: list[tuple[tuple[int, int], tuple[int, int]]] = []
 
-        if self.left:
-            corridors += self.left.get_corridors()
+    #     if self.left:
+    #         corridors += self.left.get_corridors()
 
-        if self.right:
-            corridors += self.right.get_corridors()
+    #     if self.right:
+    #         corridors += self.right.get_corridors()
 
-        if (self.left) and (self.right):
-            left_center: tuple[int, int] = self.left.get_Center()
-            right_center: tuple[int, int] = self.right.get_Center()
+    #     if (self.left) and (self.right) and self.split_dir == "h":
+    #         left_center: tuple[int, int] = self.left.get_Center()
+    #         right_center: tuple[int, int] = self.right.get_Center()
 
-            print(f"Corridor: left: {left_center} right: {right_center}")
-            corridors.append((left_center, right_center))
-        return corridors
+    #         print(f"Corridor: left: {left_center} right: {right_center}")
+    #         corridors.append((left_center, right_center))
+    #     return corridors

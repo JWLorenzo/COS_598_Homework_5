@@ -29,6 +29,9 @@
 ## Notes:
 - I decided to install mypy recently to improve my code quality and reduce bugs. That's why everything is statically typed.
 
+- Making dungeons is hard, after slamming my head against the desk for days trying to figure out something, my solution is to randomly generate doorway points along the walls and then use a pathfinding algorithm to connect the rooms. 
+
+- In a flash of insight, I realized that the algorithm I created for generating the horizontal corridors could be used on the vertical corridors as I can effectively rotate the map and it uses the same structure. 
 
 # Sources:
 - https://medium.com/pythoneers/getting-started-with-trees-in-python-a-beginners-guide-4e68818e7c05
