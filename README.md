@@ -1,9 +1,8 @@
 # Name: Jacob Lorenzo
-# Date: 4/16/25 - ?
+# Date: 4/16/25 - 5/3/25
 # Course: COS 598
 # Instructor: Dr. Hutchinson
 # Assignment: Homework 5
-
 
 # Notes:
 - What do we want to do with the project? 
