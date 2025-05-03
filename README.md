@@ -4,6 +4,14 @@
 # Instructor: Dr. Hutchinson
 # Assignment: Homework 5
 
+# Quick Start:
+
+- From the root directory you can run the main.py file. This will generate a tilemap image and a dungeon image. 
+
+# Note:
+
+- Apologies in advance, there are a lot of python files I didn't end up using because I bit off more than I could chew, but I do want to expand further upon this concept after the course finishes, so I left them there. 
+
 # Notes:
 - What do we want to do with the project? 
 - Make a game?
@@ -25,7 +33,6 @@
         - We then effectively use a form of cellular automata to update the outer wall of the structure. In a 3x3 area, we know that if at least 1 of the tiles is empty, then it has to be a wall. 
         - Hopefully the randomness will mean that it's lumpy. 
 
-## Notes:
 - I decided to install mypy recently to improve my code quality and reduce bugs. That's why everything is statically typed.
 
 - Making dungeons is hard, after slamming my head against the desk for days trying to figure out something, my solution is to randomly generate doorway points along the walls and then use a pathfinding algorithm to connect the rooms. 

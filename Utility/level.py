@@ -26,7 +26,6 @@ class Level:
                 self.dungeon_tiles[filename] = pygame.transform.scale(
                     self.dungeon_tiles[filename], TILE_SCALE
                 )
-                print(tile)
 
     def generate_room(self) -> pygame.Surface:
 

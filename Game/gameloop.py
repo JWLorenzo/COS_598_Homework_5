@@ -13,7 +13,6 @@ import os
 from Utility.level import Level
 from Utility.room_gen.tilearray import tileArray
 from Utility.room_gen.room_node import Node
-import random
 
 
 def game_loop(display: Display) -> None:
@@ -21,9 +20,6 @@ def game_loop(display: Display) -> None:
     SETUP
     """
     winw, winh = pygame.display.get_window_size()
-
-    ## TODO add level maker func
-
     cur_level = Level(display)
 
     player = Player()
@@ -35,14 +31,8 @@ def game_loop(display: Display) -> None:
     tilemap: tileArray = tileArray(60, 50)
     root: Node = Node(0, 60, 0, 50, tilemap)
     root.create_Dungeon()
-    # corridors: list[tuple[tuple[int, int], tuple[int, int]]] = root.get_corridors()
-
-    # root.trim_Rooms()
-    # root.tile_array.create_Corridors(corridors)
-
     root.carve_Dungeon()
     root.tile_array.iterative_doors()
-    # root.tile_array.dungeon_cleanup()
     leaves: list[tuple[int, int]] = root.get_leaf_centers()
 
     path = root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])

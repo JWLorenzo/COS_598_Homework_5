@@ -95,54 +95,6 @@ class tileArray:
         )
         return north, south, east, west, northeast, northwest, southeast, southwest
 
-    def dungeon_cleanup(self) -> None:
-        w_range: list[int] = list(range(self.map_width))
-        h_range: list[int] = list(range(self.map_height))
-        for row in range(self.map_height):
-            for column in range(self.map_width):
-                north, south, east, west, northeast, northwest, southeast, southwest = (
-                    self.get_directions(row, column, w_range, h_range)
-                )
-
-                if self.tile_array[row][column] == self.empty:
-                    # Fill in empty spots with normal walls
-                    if any(
-                        symbol in [self.floor, self.corridor_h, self.corridor_v]
-                        for symbol in [
-                            north,
-                            south,
-                            east,
-                            west,
-                            northeast,
-                            northwest,
-                            southeast,
-                            southwest,
-                        ]
-                    ):
-                        self.tile_array[row][column] = self.wall
-
-        # for row in range(self.map_height):
-        #     for column in range(self.map_width):
-        #         north, south, east, west, northeast, northwest, southeast, southwest = (
-        #             self.get_directions(row, column, w_range, h_range)
-        #         )
-
-        #         if self.tile_array[row][column] in [self.corridor_h, self.corridor_v]:
-        #             # Fill in ends of corridors with doors
-        #             # print(
-        #             #     f"checking {north} {south} {east} {west} {northeast} {northwest} {southeast} {southwest}"
-        #             # )
-        #             if (
-        #                 (self.wall == north and north == south)
-        #                 or (self.wall == east and east == west)
-        #             ) and (self.floor in [northeast, southeast, northwest, southwest]):
-        #                 self.tile_array[row][column] = self.door
-
-        # for row in range(self.map_height):
-        #     for column in range(self.map_width):
-        #         if self.tile_array[row][column] in [self.corridor_h, self.corridor_v]:
-        #             self.tile_array[row][column] = self.floor
-
     def vertical_corridors(
         self, iter_list: list[list[list[int]]], max: int, min: int
     ) -> None:
@@ -152,8 +104,6 @@ class tileArray:
                 rand_index = random.randrange(0, len(iter_list))
             element: list[list[int]] = iter_list.pop(rand_index)
             rand_row: int = random.randint(min, max)
-            # for element in iter_list:
-            print(element)
             self.tile_array[rand_row][element[0][1]] = self.corridor_h
             self.tile_array[rand_row][element[1][1]] = self.corridor_h
             self.vertical_corridors(iter_list, max, min)
@@ -168,8 +118,6 @@ class tileArray:
                 rand_index = random.randrange(0, len(iter_list))
             element: list[list[int]] = iter_list.pop(rand_index)
             rand_column: int = random.randint(min, max)
-            # for element in iter_list:
-            print(element)
             self.tile_array[element[0][0]][rand_column] = self.corridor_v
             self.tile_array[element[1][0]][rand_column] = self.corridor_v
             self.horizontal_corridors(iter_list, max, min)
@@ -291,11 +239,7 @@ class tileArray:
 
             priority, current = heapq.heappop(frontier)
 
-            print("prio", priority)
-            print("curre", current)
-
             if current == end:
-                print("el fin")
                 break
 
             north: tuple[int, int] = (
@@ -314,7 +258,6 @@ class tileArray:
                 current[0] + self.directions["W"][0],
                 current[1] + self.directions["W"][1],
             )
-            print("curre", current)
             print(f"N {north} S {south} E {east} W {west}")
 
             neighbors: list[tuple[int, int]] = [north, south, east, west]
