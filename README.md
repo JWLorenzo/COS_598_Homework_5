@@ -41,3 +41,5 @@
 - https://medium.com/@guribemontero/dungeon-generation-using-binary-space-trees-47d4a668e2d0
 
 - https://jonoshields.com/post/bsp-dungeon
+
+- https://www.redblobgames.com/pathfinding/a-star/implementation.html

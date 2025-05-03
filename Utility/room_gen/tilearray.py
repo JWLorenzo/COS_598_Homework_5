@@ -1,43 +1,49 @@
 from Utility.CONSTANTS import *
 import random
+import heapq
 
 
 class tileArray:
     def __init__(self, width: int, height: int) -> None:
         self.map_width: int = width
         self.map_height: int = height
-        self.floor: str = " "
+        self.floor: str = "."
         self.wall: str = "#"
         self.door: str = "@"
         self.empty: str = " "
         self.corridor_v: str = "|"
         self.corridor_h: str = "-"
-        self.wall_v: str = "]"
-        self.wall_h: str = "_"
-        self.dungeon_endcap: str = "!"
+        self.path: str = "P"
+        self.wallr: str = "R"
+        self.walll: str = "L"
         self.tile_array: list[list[str]] = [
             [self.empty for column in range(self.map_width)]
             for row in range(self.map_height)
         ]
+        self.costs: dict[str, int] = {
+            self.floor: 1,
+            self.wall: 10000,
+            self.corridor_v: 0,
+            self.corridor_h: 0,
+        }
+        self.directions: dict[str, tuple[int, int]] = {
+            "N": (0, -1),
+            "S": (0, 1),
+            "E": (1, 0),
+            "W": (-1, 0),
+        }
 
     def carve_Area(self, x_min: int, x_max: int, y_min: int, y_max: int) -> None:
         w_range: list[int] = list(range(self.map_width))
         h_range: list[int] = list(range(self.map_height))
         for row in range(y_min, y_max):
             for column in range(x_min, x_max):
-                # north, south, east, west, northeast, northwest, southeast, southwest = (
-                #     self.get_directions(row, column, w_range, h_range)
-                # )
+                north, south, east, west, northeast, northwest, southeast, southwest = (
+                    self.get_directions(row, column, w_range, h_range)
+                )
                 if column in [x_min, x_max - 1] or row in [y_min, y_max - 1]:
-                    # if self.tile_array[row][column] in [
-                    #     self.corridor_v,
-                    #     self.corridor_h,
-                    # ]:
-                    #     self.tile_array[row][column] = self.floor
-                    # else:
                     if self.tile_array[row][column] not in [
-                        self.corridor_v,
-                        self.corridor_h,
+                        self.path,
                     ]:
                         self.tile_array[row][column] = self.wall
                 else:
@@ -178,11 +184,11 @@ class tileArray:
             for column in range(self.map_width):
                 valid_row: bool = (
                     (
-                        [self.wall, self.empty]
+                        [self.wall, self.floor]
                         == [self.tile_array[row][0], self.tile_array[row][1]]
                     )
                     and (
-                        [self.empty, self.wall]
+                        [self.floor, self.wall]
                         == [
                             self.tile_array[row][self.map_width - 2],
                             self.tile_array[row][self.map_width - 1],
@@ -220,11 +226,11 @@ class tileArray:
             for row in range(self.map_height):
                 valid_column: bool = (
                     (
-                        [self.wall, self.empty]
+                        [self.wall, self.floor]
                         == [self.tile_array[0][column], self.tile_array[1][column]]
                     )
                     and (
-                        [self.empty, self.wall]
+                        [self.floor, self.wall]
                         == [
                             self.tile_array[self.map_height - 2][column],
                             self.tile_array[self.map_height - 1][column],
@@ -250,3 +256,100 @@ class tileArray:
                     x_list = []
                     y_list = []
                     coord_list = []
+
+    def reconstruct_path(
+        self,
+        came_from: dict[tuple[int, int], tuple[int, int] | None],
+        start: tuple[int, int],
+        end: tuple[int, int],
+    ):
+
+        current = end
+        path = []
+
+        if end not in came_from:
+            return []
+        while current != start:
+            prev = came_from[current]
+            path.append(prev)
+            current = prev
+        return path
+
+    def a_star_Heuristic(self, start: tuple[int, int], end: tuple[int, int]) -> int:
+        return start[0] - end[0] + start[1] - end[1]
+
+    def a_Star(self, start: tuple[int, int], end: tuple[int, int]):
+        frontier: list = []
+        heapq.heappush(frontier, (0, start))
+        came_from: dict[tuple[int, int], tuple[int, int] | None] = {}
+        cost_so_far: dict[tuple[int, int], int] = {}
+
+        came_from[start] = None
+        cost_so_far[start] = 0
+
+        while frontier:
+
+            priority, current = heapq.heappop(frontier)
+
+            print("prio", priority)
+            print("curre", current)
+
+            if current == end:
+                print("el fin")
+                break
+
+            north: tuple[int, int] = (
+                current[0] + self.directions["N"][0],
+                current[1] + self.directions["N"][1],
+            )
+            south: tuple[int, int] = (
+                current[0] + self.directions["S"][0],
+                current[1] + self.directions["S"][1],
+            )
+            east: tuple[int, int] = (
+                current[0] + self.directions["E"][0],
+                current[1] + self.directions["E"][1],
+            )
+            west: tuple[int, int] = (
+                current[0] + self.directions["W"][0],
+                current[1] + self.directions["W"][1],
+            )
+            print("curre", current)
+            print(f"N {north} S {south} E {east} W {west}")
+
+            neighbors: list[tuple[int, int]] = [north, south, east, west]
+
+            for next in neighbors:
+                if (
+                    (next[1] < self.map_height and next[1] >= 0)
+                    and (next[0] < self.map_width and next[0] >= 0)
+                    and self.tile_array[next[1]][next[0]] != self.wall
+                ):
+                    new_cost: int = (
+                        cost_so_far[current]
+                        + self.costs[self.tile_array[next[1]][next[0]]]
+                    )
+                    if (
+                        next not in cost_so_far
+                        or new_cost < cost_so_far[(next[0], next[1])]
+                    ):
+                        cost_so_far[(next[0], next[1])] = new_cost
+                        priority = new_cost + self.a_star_Heuristic(start, end)
+                        heapq.heappush(frontier, (priority, (next[0], next[1])))
+                        came_from[(next[0], next[1])] = current
+
+        return came_from, cost_so_far
+
+    def leaf_Recursion(
+        self, start: tuple[int, int], leaves: list[tuple[int, int]]
+    ) -> list[tuple[int, int]]:
+        path_glob: list[tuple[int, int]] = []
+
+        if len(leaves) == 0:
+            return []
+
+        came_from, _ = self.a_Star(start, leaves[-1])
+        path = self.reconstruct_path(came_from, start, leaves[-1])
+        path_glob.extend(path)
+        path_glob.extend(self.leaf_Recursion(start, leaves[:-1]))
+        return path_glob
