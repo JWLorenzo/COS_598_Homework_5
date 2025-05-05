@@ -14,9 +14,9 @@ class Node:
         self.max_y: int = max_y
 
         self.min_width: int = 8
-        self.max_width: int = 20
+        self.max_width: int = 16
         self.min_height: int = 8
-        self.max_height: int = 20
+        self.max_height: int = 16
 
         self.tile_array: tileArray = tile_array
 
@@ -132,9 +132,6 @@ class Node:
             self.left.carve_Dungeon()
         if self.right:
             self.right.carve_Dungeon()
-
-    def clean_Dungeon(self) -> None:
-        self.tile_array.cleanup_Area()
 
     def trim_Rooms(self) -> None:
         if self.is_Leaf():
