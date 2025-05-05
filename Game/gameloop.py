@@ -37,7 +37,7 @@ def game_loop(display: Display) -> None:
 
     path = root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])
     for i in path:
-        root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.path
+        root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.door
     root.carve_Dungeon()
 
     with open("tilemap.txt", "w") as f:
