@@ -6,41 +6,48 @@ import heapq
 class tileArray:
     def __init__(self, width: int, height: int) -> None:
 
-        # SYMBOLS
-
-        self.floor: str = "."
+        # Basic
         self.empty: str = " "
-        self.corridor_v: str = "|"
-        self.corridor_h: str = "-"
-        self.cornertr: str = "]"
-        self.cornertl: str = "["
-        self.cornerbr: str = "}"
-        self.cornerbl: str = "{"
+        self.map_width: int = width
+        self.map_height: int = height
+        self.w_range: list[int] = list(range(self.map_width))
+        self.h_range: list[int] = list(range(self.map_height))
+        self.tile_array: list[list[str]] = [
+            [self.empty for _ in range(self.map_width)] for _ in range(self.map_height)
+        ]
+        # Wall Tiles
         self.wall_North: str = "N"
         self.wall_South: str = "S"
         self.wall_East: str = "E"
         self.wall_West: str = "W"
-        self.wall_CornerR: str = ">"
-        self.wall_CornerL: str = "<"
+        self.cornertr: str = "]"
+        self.cornertl: str = "["
+        self.cornerbr: str = "}"
+        self.cornerbl: str = "{"
         self.wall_hL: str = "L"
         self.wall_hR: str = "R"
+        self.wall_CornerR: str = ">"
+        self.wall_CornerL: str = "<"
 
-        # WALL_VARS
+        # Wall Arrays
 
         self.corner_coord: list[tuple[int, int]] = []  # row, column
         self.wall_coords: list[tuple[int, int]] = []  # row, column
 
-        # TILE_ARRAY
+        # Floor Tiles
 
-        self.map_width: int = width
-        self.map_height: int = height
-        self.tile_array: list[list[str]] = [
-            [self.empty for _ in range(self.map_width)] for _ in range(self.map_height)
-        ]
+        self.floor: str = "."
 
-        # DOOR VARS
+        # Corridor Pre Door
+
+        self.corridor_v: str = "|"
+        self.corridor_h: str = "-"
+        self.corridor_cord: list[tuple[tuple[int, int], tuple[int, int]]] = (
+            []
+        )  # (corridor 1: (row, column) , corridor 2: (row, column))
+
+        # Door
         self.door_coord: list[tuple[int, int]] = []
-        self.corridor_cord: list[tuple[tuple[int, int], tuple[int, int]]] = []
         self.door_percent: float = 0.125
         self.door: str = "P"
         self.locked: str = "!"
@@ -55,6 +62,15 @@ class tileArray:
             self.wall_South: 10000,
             self.wall_East: 10000,
             self.wall_West: 10000,
+            self.cornertr: 10000,
+            self.cornertr: 10000,
+            self.cornertl: 10000,
+            self.cornerbr: 10000,
+            self.cornerbl: 10000,
+            self.wall_hL: 10000,
+            self.wall_hR: 10000,
+            self.wall_CornerR: 10000,
+            self.wall_CornerL: 10000,
         }
         self.directions: dict[str, tuple[int, int]] = {
             "N": (0, -1),
@@ -63,114 +79,107 @@ class tileArray:
             "W": (-1, 0),
         }
 
+    def get_tile(self, row: int, col: int) -> str:
+        if row in self.h_range and col in self.w_range:
+            return self.tile_array[row][col]
+        return ""
+
+    def get_directions(self, row: int, column: int) -> dict[str, str]:
+        direction_dictionary: dict[str, str] = {
+            "north": self.get_tile(row - 1, column),
+            "south": self.get_tile(row + 1, column),
+            "east": self.get_tile(row, column + 1),
+            "west": self.get_tile(row, column - 1),
+            "northeast": self.get_tile(row - 1, column + 1),
+            "northwest": self.get_tile(row - 1, column - 1),
+            "southeast": self.get_tile(row + 1, column + 1),
+            "southwest": self.get_tile(row + 1, column - 1),
+        }
+
+        return direction_dictionary
+
     def carve_Area(self, x_min: int, x_max: int, y_min: int, y_max: int) -> None:
-        w_range: list[int] = list(range(self.map_width))
-        h_range: list[int] = list(range(self.map_height))
+
         for row in range(y_min, y_max):
             for column in range(x_min, x_max):
-                north, south, east, west, northeast, northwest, southeast, southwest = (
-                    self.get_directions(row, column, w_range, h_range)
-                )
 
-                if column == x_min and row == y_min:
-                    # Corner BL
-                    self.tile_array[row][column] = self.cornertl
-                    self.corner_coord.append((row, column))
-                elif column == x_max - 1 and row == y_min:
-                    # Corner BR
-                    self.tile_array[row][column] = self.cornertr
-                    self.corner_coord.append((row, column))
-                elif column == x_min and row == y_max - 1:
-                    # Corner TL
-                    self.tile_array[row][column] = self.cornerbl
-                    self.corner_coord.append((row, column))
-                elif column == x_max - 1 and row == y_max - 1:
-                    # Corner TR
-                    self.tile_array[row][column] = self.cornerbr
-                    self.corner_coord.append((row, column))
+                is_top: bool = row == y_min
+                is_bottom: bool = row == y_max - 1
+                is_left: bool = column == x_min
+                is_right: bool = column == x_max - 1
+                is_right_end: bool = column == x_max - 2
+                is_left_end: bool = column == x_min + 1
 
-                elif column in range(x_min, x_max) and row == y_min:
-                    self.tile_array[row][column] = self.wall_North
-                elif column in range(x_min, x_max) and row == y_max - 1:
-                    self.tile_array[row][column] = self.wall_South
-                elif row in range(y_min, y_max) and column == x_min:
-                    self.tile_array[row][column] = self.wall_West
-                elif row in range(y_min, y_max) and column == x_max - 1:
-                    self.tile_array[row][column] = self.wall_East
+                if is_top and is_left:
+                    tile = self.cornertl
+
+                elif is_top and is_right:
+                    tile = self.cornertr
+
+                elif is_bottom and is_left:
+                    tile = self.cornerbl
+
+                elif is_bottom and is_right:
+                    tile = self.cornerbr
+
+                elif (is_top or is_bottom) and is_left_end:
+                    tile = self.wall_hL
+
+                elif (is_top or is_bottom) and is_right_end:
+                    tile = self.wall_hR
+
+                elif is_top:
+                    tile = self.wall_North
+
+                elif is_bottom:
+                    tile = self.wall_South
+
+                elif is_left:
+                    tile = self.wall_West
+
+                elif is_right:
+                    tile = self.wall_East
 
                 else:
-                    self.tile_array[row][column] = self.floor
+                    tile = self.floor
 
-                if self.tile_array[row][column] != self.floor:
+                self.tile_array[row][column] = tile
+
+                if tile != self.floor:
                     self.wall_coords.append((row, column))
 
-    def get_directions(
-        self, row: int, column: int, w_range: list[int], h_range: list[int]
-    ) -> tuple[str, str, str, str, str, str, str, str]:
-        north: str = self.tile_array[row - 1][column] if (row - 1) in h_range else ""
-        south: str = self.tile_array[row + 1][column] if (row + 1) in h_range else ""
-        east: str = self.tile_array[row][column + 1] if (column + 1) in w_range else ""
-        west: str = self.tile_array[row][column - 1] if (column - 1) in w_range else ""
-        northeast: str = (
-            self.tile_array[row - 1][column + 1]
-            if (row - 1) in h_range and (column + 1) in w_range
-            else ""
-        )
-        northwest: str = (
-            self.tile_array[row - 1][column - 1]
-            if (row - 1) in h_range and (column - 1) in w_range
-            else ""
-        )
+                if tile in (self.cornertl, self.cornertr, self.cornerbl, self.cornerbr):
+                    self.corner_coord.append((row, column))
 
-        southeast: str = (
-            self.tile_array[row + 1][column + 1]
-            if (row + 1) in h_range and (column + 1) in w_range
-            else ""
-        )
-
-        southwest: str = (
-            self.tile_array[row + 1][column - 1]
-            if (row + 1) in h_range and (column - 1) in w_range
-            else ""
-        )
-        return north, south, east, west, northeast, northwest, southeast, southwest
-
-    def vertical_corridors(
-        self, iter_list: list[list[list[int]]], max: int, min: int
-    ) -> None:
-        rand_index: int = 0
-        if len(iter_list) > 0:
-            if len(iter_list) > 2:
-                rand_index = random.randrange(0, len(iter_list))
-            element: list[list[int]] = iter_list.pop(rand_index)
-            rand_row: int = random.randint(min, max)
-            self.tile_array[rand_row][element[0][1]] = self.corridor_h
-            self.tile_array[rand_row][element[1][1]] = self.corridor_h
-            self.corridor_cord.append(
-                ((rand_row, element[0][1]), (rand_row, element[1][1]))
+    def carve_Corridors(
+        self,
+        iter_list: list[tuple[tuple[int, int], tuple[int, int]]],
+        min_val: int,
+        max_val: int,
+        horizontal: bool = True,
+    ):
+        while iter_list:
+            rand_index: int = (
+                random.randrange(len(iter_list)) if len(iter_list) > 2 else 0
             )
-            self.vertical_corridors(iter_list, max, min)
-        return
+            element = iter_list.pop(rand_index)
+            rand_pos = random.randint(min_val, max_val)
 
-    def horizontal_corridors(
-        self, iter_list: list[list[list[int]]], max: int, min: int
-    ) -> None:
-        rand_index: int = 0
-        if len(iter_list) > 0:
-            if len(iter_list) > 2:
-                rand_index = random.randrange(0, len(iter_list))
-            element: list[list[int]] = iter_list.pop(rand_index)
-            rand_column: int = random.randint(min, max)
-            self.tile_array[element[0][0]][rand_column] = self.corridor_v
-            self.tile_array[element[1][0]][rand_column] = self.corridor_v
-            self.corridor_cord.append(
-                ((element[0][0], rand_column), (element[1][0], rand_column))
-            )
-            self.horizontal_corridors(iter_list, max, min)
-        return
+            if horizontal:
+                self.tile_array[rand_pos][element[0][1]] = self.corridor_h
+                self.tile_array[rand_pos][element[1][1]] = self.corridor_h
+                self.corridor_cord.append(
+                    ((rand_pos, element[0][1]), (rand_pos, element[1][1]))
+                )
+            else:
+                self.tile_array[element[0][0]][rand_pos] = self.corridor_v
+                self.tile_array[element[1][0]][rand_pos] = self.corridor_v
+                self.corridor_cord.append(
+                    ((element[0][0], rand_pos), (element[1][0], rand_pos))
+                )
 
     def iterative_doors(self) -> None:
-        coord_list: list[list[list[int]]] = []
+        coord_list: list[tuple[tuple[int, int], tuple[int, int]]] = []
         x_list: list[int] = []
         y_list: list[int] = []
         for row in range(self.map_height):
@@ -196,13 +205,13 @@ class tileArray:
                             and self.tile_array[row][column + 1] == self.wall_West
                         ):
                             if column not in x_list:
-                                coord_list.append([[row, column], [row, column + 1]])
+                                coord_list.append(((row, column), (row, column + 1)))
                                 x_list.append(column)
                             y_list.append(row)
                             y_list = sorted(y_list)
                 else:
                     if len(coord_list) > 0:
-                        self.vertical_corridors(coord_list, y_list[-1], y_list[0])
+                        self.carve_Corridors(coord_list, y_list[0], y_list[-1])
                         x_list = []
                         y_list = []
                         coord_list = []
@@ -238,14 +247,16 @@ class tileArray:
                             and self.tile_array[row + 1][column] == self.wall_North
                         ):
                             if row not in y_list:
-                                coord_list.append([[row, column], [row + 1, column]])
+                                coord_list.append(((row, column), (row + 1, column)))
                                 y_list.append(row)
                             x_list.append(column)
                             x_list = sorted(x_list)
 
             if not valid_column:
                 if len(coord_list) > 0:
-                    self.horizontal_corridors(coord_list, x_list[-1], x_list[0])
+                    self.carve_Corridors(
+                        coord_list, x_list[0], x_list[-1], horizontal=False
+                    )
                     x_list = []
                     y_list = []
                     coord_list = []
@@ -355,16 +366,12 @@ class tileArray:
         return path_glob
 
     def create_Doors(self, path: list[tuple[int, int]]) -> None:
-        w_range: list[int] = list(range(self.map_width))
-        h_range: list[int] = list(range(self.map_height))
 
         for i in path:
-            north, south, east, west, northeast, northwest, southeast, southwest = (
-                self.get_directions(i[1], i[0], w_range, h_range)
-            )
+            directions = self.get_directions(i[1], i[0])
             if any(
                 [
-                    north
+                    directions["north"]
                     in [
                         self.wall_East,
                         self.wall_West,
@@ -373,7 +380,7 @@ class tileArray:
                         self.cornertl,
                         self.cornertr,
                     ],
-                    south
+                    directions["south"]
                     in [
                         self.wall_East,
                         self.wall_West,
@@ -382,7 +389,7 @@ class tileArray:
                         self.cornertl,
                         self.cornertr,
                     ],
-                    east
+                    directions["east"]
                     in [
                         self.wall_North,
                         self.wall_South,
@@ -391,7 +398,7 @@ class tileArray:
                         self.cornertl,
                         self.cornertr,
                     ],
-                    west
+                    directions["west"]
                     in [
                         self.wall_North,
                         self.wall_South,
@@ -408,15 +415,13 @@ class tileArray:
                 self.tile_array[i[1]][i[0]] = self.floor
 
         for coord in self.corridor_cord:
-            north, south, east, west, northeast, northwest, southeast, southwest = (
-                self.get_directions(coord[0][0], coord[0][1], w_range, h_range)
-            )
+            directions = self.get_directions(coord[0][0], coord[0][1])
+
             coordinate: str = self.tile_array[coord[0][0]][coord[0][1]]
-            print("COORD", coordinate)
             if coordinate != self.door:
                 if coordinate == self.corridor_v:
                     if random.random() < self.door_percent:
-                        if self.wall_North in [east, west]:
+                        if self.wall_North in [directions["east"], directions["west"]]:
                             self.tile_array[coord[0][0]][coord[0][1]] = self.wall_North
                             self.tile_array[coord[1][0]][coord[1][1]] = self.wall_South
                         else:
@@ -430,7 +435,7 @@ class tileArray:
                         self.door_coord.append((coord[1][0], coord[1][1]))
                 elif coordinate == self.corridor_h:
                     if random.random() < self.door_percent:
-                        if self.wall_East in [north, south]:
+                        if self.wall_East in [directions["north"], directions["south"]]:
                             self.tile_array[coord[0][0]][coord[0][1]] = self.wall_East
                             self.tile_array[coord[1][0]][coord[1][1]] = self.wall_West
                         else:
@@ -442,47 +447,53 @@ class tileArray:
                         self.door_coord.append((coord[0][0], coord[0][1]))
                         self.door_coord.append((coord[1][0], coord[1][1]))
 
-    def cleanup_Dungeon(self) -> None:
-        w_range: list[int] = list(range(self.map_width))
-        h_range: list[int] = list(range(self.map_height))
-        # Cleanup tiles above doorways
-        for door in self.door_coord:
+    def mesh_walls(self) -> None:
+        for corner in self.corner_coord:
+            directions = self.get_directions(corner[0], corner[1])
 
-            north, south, east, west, northeast, northwest, southeast, southwest = (
-                self.get_directions(door[0], door[1], w_range, h_range)
-            )
+            replace_north_right: bool = directions["north"] in [
+                self.wall_East,
+                self.cornertr,
+                self.cornerbr,
+                self.wall_CornerL,
+            ]
 
-            if south in [self.wall_East, self.cornerbr] or southeast == self.wall_West:
-                # Set the southern tile to a corner
-                if southwest != self.wall_South:
-                    self.tile_array[door[0] + 1][door[1]] = self.wall_CornerR
-                else:
-                    self.tile_array[door[0] + 1][door[1]] = self.wall_South
+            replace_south_right: bool = directions["south"] in [
+                self.wall_East,
+                self.cornertr,
+                self.cornerbr,
+                self.wall_CornerL,
+            ]
 
-            elif (
-                south in [self.wall_West, self.cornerbl] or southwest == self.wall_East
-            ):
-                # Set the southern tile to a corner
-                if southeast != self.wall_South:
-                    self.tile_array[door[0] + 1][door[1]] = self.wall_CornerL
-                else:
-                    self.tile_array[door[0] + 1][door[1]] = self.wall_South
+            replace_north_left: bool = directions["north"] in [
+                self.wall_West,
+                self.cornertl,
+                self.cornerbl,
+                self.wall_CornerR,
+            ]
 
-            if north in [self.wall_East, self.cornertr]:
-                self.tile_array[door[0] - 1][door[1]] = self.wall_hL
-            elif north in [self.wall_West, self.cornertl]:
-                self.tile_array[door[0] - 1][door[1]] = self.wall_hR
+            replace_south_left: bool = directions["south"] in [
+                self.wall_West,
+                self.cornertl,
+                self.cornerbl,
+                self.wall_CornerR,
+            ]
+            if replace_north_right and replace_south_right:
+                self.tile_array[corner[0]][corner[1]] = self.wall_East
+            elif replace_north_left and replace_south_left:
+                self.tile_array[corner[0]][corner[1]] = self.wall_West
 
+    def clean_Doors(self):
         for door in self.door_coord:
 
             if self.tile_array[door[0]][door[1]] in [self.door, self.locked]:
-                north, south, east, west, northeast, northwest, southeast, southwest = (
-                    self.get_directions(door[0], door[1], w_range, h_range)
-                )
-                if south in [self.door, self.locked]:
+                directions = self.get_directions(door[0], door[1])
+                if directions["south"] in [self.door, self.locked]:
                     self.tile_array[door[0] + 1][door[1]] = self.floor
 
-                elif east in [self.door, self.locked] or west in [
+                elif directions["east"] in [self.door, self.locked] or directions[
+                    "west"
+                ] in [
                     self.door,
                     self.locked,
                 ]:
@@ -491,35 +502,43 @@ class tileArray:
                     else:
                         self.tile_array[door[0]][door[1]] = self.floor
 
-        # Cleanup walls
-
+    def clean_Walls(self) -> None:
         for wall in self.wall_coords:
-            north, south, east, west, northeast, northwest, southeast, southwest = (
-                self.get_directions(wall[0], wall[1], w_range, h_range)
-            )
-            # print("I WAS HERE")
-            # print(self.tile_array[wall[0]][wall[1]])
-            # print(south)
-            if (self.tile_array[wall[0]][wall[1]] == self.wall_South) and (
-                south == self.wall_North
-            ):
-                # print("NICE TRY")
+            directions = self.get_directions(wall[0], wall[1])
+
+            is_wall: bool = self.tile_array[wall[0]][wall[1]] in [
+                self.wall_North,
+                self.wall_South,
+                self.wall_hL,
+                self.wall_hR,
+            ]
+
+            remove_south: bool = directions["south"] in [
+                self.wall_North,
+                self.wall_South,
+                self.wall_hL,
+                self.wall_hR,
+            ]
+            if remove_south and is_wall:
                 self.tile_array[wall[0] + 1][wall[1]] = self.floor
 
-        # Cleanup corners to mesh with walls
+    # def cleanup_Dungeon(self) -> None:
 
-        for corner in self.corner_coord:
-            north, south, east, west, northeast, northwest, southeast, southwest = (
-                self.get_directions(corner[0], corner[1], w_range, h_range)
-            )
+    #     # Cleanup corners to mesh with walls
 
-            if north in [self.wall_West, self.wall_CornerR] and south in [
-                self.wall_West,
-                self.cornertl,
-            ]:
-                self.tile_array[corner[0]][corner[1]] = self.wall_West
-            elif north in [self.wall_East, self.wall_CornerL] and south in [
-                self.wall_East,
-                self.cornertr,
-            ]:
-                self.tile_array[corner[0]][corner[1]] = self.wall_East
+    #     for corner in self.corner_coord:
+    #         north, south, east, west, northeast, northwest, southeast, southwest = (
+    #             self.get_directions(corner[0], corner[1], w_range, h_range)
+    #         )
+
+    #         if north in [self.wall_West, self.wall_CornerR] and south in [
+    #             self.wall_West,
+    #             self.cornertl,
+    #         ]:
+
+    #             self.tile_array[corner[0]][corner[1]] = self.wall_West
+    #         elif north in [self.wall_East, self.wall_CornerL] and south in [
+    #             self.wall_East,
+    #             self.cornertr,
+    #         ]:
+    #             self.tile_array[corner[0]][corner[1]] = self.wall_East

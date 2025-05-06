@@ -14,8 +14,12 @@ def generate_Dungeon(width: int, height: int) -> None:
     leaves: list[tuple[int, int]] = root.get_leaf_centers()
 
     path = root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])
+    root.tile_array.mesh_walls()
+    root.tile_array.clean_Walls()
     root.tile_array.create_Doors(path)
-    root.tile_array.cleanup_Dungeon()
+
+    root.tile_array.clean_Doors()
+    # root.tile_array.cleanup_Dungeon()
     with open("tilemap.txt", "w") as f:
         for row in range(len(tilemap.tile_array)):
             for column in range(len(tilemap.tile_array[row])):
@@ -29,21 +33,45 @@ def generate_Dungeon(width: int, height: int) -> None:
 def generate_dungeon_image(tile_map: tileArray) -> None:
 
     tiles = {
-        tile_map.wall_North: Image.open("game_images/Dungeon_Tiles/final/WHM.jpg"),
-        tile_map.wall_South: Image.open("game_images/Dungeon_Tiles/final/WHM.jpg"),
-        tile_map.wall_West: Image.open("game_images/Dungeon_Tiles/final/WVL.jpg"),
-        tile_map.wall_East: Image.open("game_images/Dungeon_Tiles/final/WVR.jpg"),
-        tile_map.wall_hR: Image.open("game_images/Dungeon_Tiles/final/WHR.jpg"),
-        tile_map.wall_hL: Image.open("game_images/Dungeon_Tiles/final/WHL.jpg"),
-        tile_map.cornerbl: Image.open("game_images/Dungeon_Tiles/final/PL.jpg"),
-        tile_map.cornerbr: Image.open("game_images/Dungeon_Tiles/final/PR.jpg"),
-        tile_map.cornertr: Image.open("game_images/Dungeon_Tiles/final/WVR.jpg"),
-        tile_map.cornertl: Image.open("game_images/Dungeon_Tiles/final/WVL.jpg"),
-        tile_map.floor: Image.open("game_images/Dungeon_Tiles/final/F.jpg"),
-        tile_map.locked: Image.open("game_images/Dungeon_Tiles/final/DL.jpg"),
-        tile_map.door: Image.open("game_images/Dungeon_Tiles/final/D.jpg"),
-        tile_map.wall_CornerR: Image.open("game_images/Dungeon_Tiles/final/WCR.jpg"),
-        tile_map.wall_CornerL: Image.open("game_images/Dungeon_Tiles/final/WCL.jpg"),
+        tile_map.wall_North: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Middle.jpg"
+        ),
+        tile_map.wall_South: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Middle.jpg"
+        ),
+        tile_map.wall_West: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Vertical_Left.jpg"
+        ),
+        tile_map.wall_East: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Vertical_Right.jpg"
+        ),
+        tile_map.wall_hR: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Right.jpg"
+        ),
+        tile_map.wall_hL: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Left.jpg"
+        ),
+        tile_map.cornerbl: Image.open(
+            "game_images/Dungeon_Tiles/final/Corner_Left.jpg"
+        ),
+        tile_map.cornerbr: Image.open(
+            "game_images/Dungeon_Tiles/final/Corner_Right.jpg"
+        ),
+        tile_map.cornertr: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Vertical_Right.jpg"
+        ),
+        tile_map.cornertl: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Vertical_Left.jpg"
+        ),
+        tile_map.floor: Image.open("game_images/Dungeon_Tiles/final/Floor.jpg"),
+        tile_map.wall_CornerR: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Corner_Inner_Right.jpg"
+        ),
+        tile_map.wall_CornerL: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Corner_Inner_Left.jpg"
+        ),
+        tile_map.locked: Image.open("game_images/Dungeon_Tiles/final/Door_Locked.jpg"),
+        tile_map.door: Image.open("game_images/Dungeon_Tiles/final/Door.jpg"),
     }
 
     width, height = tiles[tile_map.wall_North].size
