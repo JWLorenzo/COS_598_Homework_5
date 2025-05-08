@@ -12,13 +12,16 @@ def generate_Dungeon(width: int, height: int) -> None:
     root.carve_Dungeon()
     root.tile_array.iterative_doors()
     leaves: list[tuple[int, int]] = root.get_leaf_centers()
+    path = list(set(root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])))
 
-    path = root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])
-    root.tile_array.mesh_walls()
-    root.tile_array.clean_Walls()
     root.tile_array.create_Doors(path)
-
+    # for i in path:
+    #     root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.door
+    root.tile_array.clean_Walls()
+    root.tile_array.mesh_walls()
+    root.tile_array.create_inner_Corners()
     root.tile_array.clean_Doors()
+
     # root.tile_array.cleanup_Dungeon()
     with open("tilemap.txt", "w") as f:
         for row in range(len(tilemap.tile_array)):
@@ -45,12 +48,12 @@ def generate_dungeon_image(tile_map: tileArray) -> None:
         tile_map.wall_East: Image.open(
             "game_images/Dungeon_Tiles/final/Wall_Vertical_Right.jpg"
         ),
-        tile_map.wall_hR: Image.open(
-            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Right.jpg"
-        ),
-        tile_map.wall_hL: Image.open(
-            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Left.jpg"
-        ),
+        # tile_map.wall_hR: Image.open(
+        #     "game_images/Dungeon_Tiles/final/Wall_Horizontal_Right.jpg"
+        # ),
+        # tile_map.wall_hL: Image.open(
+        #     "game_images/Dungeon_Tiles/final/Wall_Horizontal_Left.jpg"
+        # ),
         tile_map.cornerbl: Image.open(
             "game_images/Dungeon_Tiles/final/Corner_Left.jpg"
         ),

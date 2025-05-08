@@ -8,4 +8,4 @@ IMAGE_DIR = "game_images"
 ALPHA = "white"
 PLAYER_SIZE = [64, 64]
 RUN_GAME = False
-TEST = False
+TEST = True

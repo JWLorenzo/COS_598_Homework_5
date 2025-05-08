@@ -39,6 +39,11 @@
 
 - In a flash of insight, I realized that the algorithm I created for generating the horizontal corridors could be used on the vertical corridors as I can effectively rotate the map and it uses the same structure. 
 
+
+# Progress Notes:
+
+- 5/7/25: Modified the A* code so that door paths are treated as high priority paths. This makes it so it should use as little doors as possibe and any locked doors generated should be useful for the player.
+
 # Sources:
 - https://medium.com/pythoneers/getting-started-with-trees-in-python-a-beginners-guide-4e68818e7c05
 
