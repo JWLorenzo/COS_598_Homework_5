@@ -48,12 +48,12 @@ def generate_dungeon_image(tile_map: tileArray) -> None:
         tile_map.wall_East: Image.open(
             "game_images/Dungeon_Tiles/final/Wall_Vertical_Right.jpg"
         ),
-        # tile_map.wall_hR: Image.open(
-        #     "game_images/Dungeon_Tiles/final/Wall_Horizontal_Right.jpg"
-        # ),
-        # tile_map.wall_hL: Image.open(
-        #     "game_images/Dungeon_Tiles/final/Wall_Horizontal_Left.jpg"
-        # ),
+        tile_map.wall_hR: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Right.jpg"
+        ),
+        tile_map.wall_hL: Image.open(
+            "game_images/Dungeon_Tiles/final/Wall_Horizontal_Left.jpg"
+        ),
         tile_map.cornerbl: Image.open(
             "game_images/Dungeon_Tiles/final/Corner_Left.jpg"
         ),

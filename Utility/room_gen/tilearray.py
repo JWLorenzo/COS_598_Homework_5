@@ -20,12 +20,10 @@ class tileArray:
         self.wall_South: str = "S"
         self.wall_East: str = "E"
         self.wall_West: str = "W"
-        # self.cornertr: str = "]"
-        # self.cornertl: str = "["
         self.cornerbr: str = "}"
         self.cornerbl: str = "{"
-        # self.wall_hL: str = "L"
-        # self.wall_hR: str = "R"
+        self.wall_hL: str = "L"
+        self.wall_hR: str = "R"
         self.wall_CornerR: str = ">"
         self.wall_CornerL: str = "<"
 
@@ -63,12 +61,10 @@ class tileArray:
             self.wall_South: 100000000,
             self.wall_East: 100000000,
             self.wall_West: 100000000,
-            # self.cornertr: 100000000,
-            # self.cornertl: 100000000,
             self.cornerbr: 100000000,
             self.cornerbl: 100000000,
-            # self.wall_hL: 100000000,
-            # self.wall_hR: 100000000,
+            self.wall_hL: 100000000,
+            self.wall_hR: 100000000,
             self.wall_CornerR: 100000000,
             self.wall_CornerL: 100000000,
         }
@@ -111,11 +107,9 @@ class tileArray:
                 is_left_end: bool = column == x_min + 1
 
                 if is_top and is_left:
-                    # tile = self.cornertl
                     tile = self.wall_West
 
                 elif is_top and is_right:
-                    # tile = self.cornertr
                     tile = self.wall_East
 
                 elif is_bottom and is_left:
@@ -124,8 +118,8 @@ class tileArray:
                 elif is_bottom and is_right:
                     tile = self.cornerbr
 
-                # elif (is_top or is_bottom) and is_left_end:
-                #     tile = self.wall_hL
+                elif (is_top or is_bottom) and is_left_end:
+                    tile = self.wall_hL
 
                 # elif (is_top or is_bottom) and is_right_end:
                 #     tile = self.wall_hR
@@ -334,10 +328,8 @@ class tileArray:
                         self.wall_West,
                         self.cornerbl,
                         self.cornerbr,
-                        # self.cornertl,
-                        # self.cornertr,
-                        # self.wall_hL,
-                        # self.wall_hR,
+                        self.wall_hL,
+                        self.wall_hR,
                         self.wall_CornerR,
                         self.wall_CornerL,
                     ]
@@ -391,7 +383,6 @@ class tileArray:
             )
             print(f"V2 N {north} S {south} E {east} W {west}")
             neighbors: list[tuple[int, int]] = []
-            # if any([north, south, east, west]):
             neighbors = [north, south, east, west]
             # neighbors
 
@@ -407,10 +398,8 @@ class tileArray:
                         self.wall_West,
                         self.cornerbl,
                         self.cornerbr,
-                        # self.cornertl,
-                        # self.cornertr,
-                        # self.wall_hL,
-                        # self.wall_hR,
+                        self.wall_hL,
+                        self.wall_hR,
                         self.wall_CornerR,
                         self.wall_CornerL,
                     ]
@@ -462,10 +451,8 @@ class tileArray:
                 self.wall_West,
                 self.cornerbl,
                 self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
                 self.wall_CornerR,
                 self.wall_CornerL,
             ]
@@ -477,10 +464,8 @@ class tileArray:
                 self.wall_West,
                 self.cornerbl,
                 self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
                 self.wall_CornerR,
                 self.wall_CornerL,
             ]
@@ -492,10 +477,8 @@ class tileArray:
                 self.wall_West,
                 self.cornerbl,
                 self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
                 self.wall_CornerR,
                 self.wall_CornerL,
             ]
@@ -507,10 +490,8 @@ class tileArray:
                 self.wall_West,
                 self.cornerbl,
                 self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
                 self.wall_CornerR,
                 self.wall_CornerL,
             ]
@@ -563,62 +544,36 @@ class tileArray:
             directions = self.get_directions(corner[0], corner[1])
 
             replace_north_right: bool = directions["north"] in [
-                # self.wall_North,
-                # self.wall_South,
                 self.wall_East,
-                # self.wall_West,
                 self.cornerbl,
-                # self.cornertl,
-                # self.cornertr,
                 self.cornerbr,
                 self.wall_CornerL,
                 self.wall_CornerR,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
             ]
 
             replace_south_right: bool = directions["south"] in [
-                # self.wall_North,
-                # self.wall_South,
                 self.wall_East,
-                # self.wall_West,
-                # self.cornerbl,
-                # self.cornertl,
-                # self.cornertr,
-                # self.cornerbr,
                 self.wall_CornerL,
                 self.wall_CornerR,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
             ]
 
             replace_north_left: bool = directions["north"] in [
-                # self.wall_North,
-                # self.wall_South,
-                # self.wall_East,
                 self.wall_West,
-                # self.cornerbl,
-                # self.cornertl,
-                # self.cornertr,
-                # self.cornerbr,
                 self.wall_CornerL,
                 self.wall_CornerR,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
             ]
             replace_south_left: bool = directions["south"] in [
-                # self.wall_North,
-                # self.wall_South,
-                # self.wall_East,
                 self.wall_West,
-                # self.cornerbl,
-                # self.cornertl,
-                # self.cornertr,
-                # self.cornerbr,
                 self.wall_CornerL,
                 self.wall_CornerR,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
             ]
             if replace_north_right and replace_south_right:
                 self.tile_array[corner[0]][corner[1]] = self.wall_East
@@ -653,19 +608,17 @@ class tileArray:
             is_wall: bool = self.tile_array[wall[0]][wall[1]] in [
                 self.wall_North,
                 self.wall_South,
-                # self.wall_hL,
-                # self.wall_hR,
                 self.cornerbl,
-                # self.cornertl,
-                # self.cornertr,
                 self.cornerbr,
+                self.wall_hL,
+                self.wall_hR,
             ]
 
             remove_south: bool = directions["south"] in [
                 self.wall_North,
                 self.wall_South,
-                # self.wall_hL,
-                # self.wall_hR,
+                self.wall_hL,
+                self.wall_hR,
             ]
             if remove_south and is_wall:
                 self.tile_array[wall[0] + 1][wall[1]] = self.floor
@@ -677,122 +630,67 @@ class tileArray:
         for wall in self.wall_coords:
             directions = self.get_directions(wall[0], wall[1])
 
-            north_nonwall: bool = directions["north"] in [
+            current_tile: str = self.tile_array[wall[0]][wall[1]]
+
+            nonwall_list: list[str] = [
                 self.door,
                 self.locked,
                 self.floor,
             ]
 
-            south_nonwall: bool = directions["south"] in [
-                self.door,
-                self.locked,
-                self.floor,
-            ]
-            east_nonwall: bool = directions["east"] in [
-                self.door,
-                self.locked,
-                self.floor,
+            corner_list: list[str] = [
+                self.cornerbl,
+                self.cornerbr,
             ]
 
-            west_nonwall: bool = directions["west"] in [
-                self.door,
-                self.locked,
-                self.floor,
-            ]
-            southeast_nonwall: bool = directions["southeast"] in [
-                self.door,
-                self.locked,
-                self.floor,
-            ]
-            southwest_nonwall: bool = directions["southwest"] in [
-                self.door,
-                self.locked,
-                self.floor,
-            ]
-
-            is_horizontal_wall: bool = self.tile_array[wall[0]][wall[1]] in [
-                self.wall_North,
-                self.wall_South,
-            ]
-            is_vertical_wall: bool = self.tile_array[wall[0]][wall[1]] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-            is_north_vertical: bool = directions["north"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-            is_south_vertical: bool = directions["south"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-            is_west_vertical: bool = directions["west"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-            is_east_vertical: bool = directions["east"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-
-            is_southwest_vertical: bool = directions["southwest"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-            is_southeast_vertical: bool = directions["southeast"] in [
-                self.wall_East,
-                self.wall_West,
-            ]
-
-            is_south_horizontal: bool = directions["south"] in [
-                self.wall_North,
-                self.wall_South,
-            ]
-            is_north_horizontal: bool = directions["north"] in [
-                self.wall_North,
-                self.wall_South,
-            ]
-
-            is_east_inner_corner: bool = directions["east"] in [
+            inner_corner_list: list[str] = [
                 self.wall_CornerL,
                 self.wall_CornerR,
             ]
-            is_west_inner_corner: bool = directions["west"] in [
-                self.wall_CornerL,
-                self.wall_CornerR,
+
+            horizontal_wall_list: list[str] = [
+                self.wall_North,
+                self.wall_South,
+                self.wall_hL,
+                self.wall_hR,
             ]
-            is_corner: bool = self.tile_array[wall[0]][wall[1]] in [
-                self.cornerbl,
-                self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
+
+            vertical_wall_list: list[str] = [
+                self.wall_East,
+                self.wall_West,
             ]
-            is_east_corner = directions["east"] in [
-                self.cornerbl,
-                self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-            ]
-            is_west_corner = directions["west"] in [
-                self.cornerbl,
-                self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-            ]
-            is_north_corner = directions["north"] in [
-                self.cornerbl,
-                self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-            ]
-            is_south_corner = directions["south"] in [
-                self.cornerbl,
-                self.cornerbr,
-                # self.cornertl,
-                # self.cornertr,
-            ]
+
+            north_nonwall: bool = directions["north"] in nonwall_list
+
+            south_nonwall: bool = directions["south"] in nonwall_list
+            east_nonwall: bool = directions["east"] in nonwall_list
+
+            west_nonwall: bool = directions["west"] in nonwall_list
+            southeast_nonwall: bool = directions["southeast"] in nonwall_list
+            southwest_nonwall: bool = directions["southwest"] in nonwall_list
+            is_horizontal_wall: bool = current_tile in horizontal_wall_list
+            is_vertical_wall: bool = current_tile in vertical_wall_list
+            is_north_vertical: bool = directions["north"] in vertical_wall_list
+            is_south_vertical: bool = directions["south"] in vertical_wall_list
+            is_west_vertical: bool = directions["west"] in vertical_wall_list
+            is_east_vertical: bool = directions["east"] in vertical_wall_list
+            is_southwest_vertical: bool = directions["southwest"] in vertical_wall_list
+            is_southeast_vertical: bool = directions["southeast"] in vertical_wall_list
+
+            is_south_horizontal: bool = directions["south"] in horizontal_wall_list
+            is_north_horizontal: bool = directions["north"] in horizontal_wall_list
+
+            is_innner_corner: bool = current_tile in inner_corner_list
+
+            is_east_inner_corner: bool = directions["east"] in inner_corner_list
+            is_west_inner_corner: bool = directions["west"] in inner_corner_list
+            is_corner: bool = current_tile in corner_list
+            is_east_corner = directions["east"] in corner_list
+            is_west_corner = directions["west"] in corner_list
+            is_north_corner = directions["north"] in corner_list
+            is_south_corner = directions["south"] in corner_list
             is_south_empty: bool = directions["south"] == ""
-
+            is_north_empty: bool = directions["north"] == ""
             tile: str = ""
 
             if is_corner:
@@ -801,12 +699,18 @@ class tileArray:
                         tile = self.wall_South
                     elif (not west_nonwall) and southwest_nonwall:
                         tile = self.wall_South
+                    elif directions["west"] == self.wall_CornerR:
+                        tile = self.wall_hL
                 elif is_south_vertical:
                     if north_nonwall:
                         if directions["south"] == self.wall_East:
                             tile = self.wall_CornerL
                         elif directions["south"] == self.wall_West:
                             tile = self.wall_CornerR
+                    elif is_southeast_vertical:
+                        tile = self.wall_CornerL
+                    elif is_southwest_vertical:
+                        tile = self.wall_CornerR
 
             elif is_vertical_wall and north_nonwall:
                 if is_south_vertical:
@@ -819,10 +723,42 @@ class tileArray:
                     elif directions["west"] == self.wall_CornerL:
                         tile = self.wall_CornerR
                 elif is_south_horizontal or is_south_corner:
-                    if self.tile_array[wall[0]][wall[1]] == self.wall_East:
+                    if current_tile == self.wall_East:
                         tile = self.wall_CornerL
-                    elif self.tile_array[wall[0]][wall[1]] == self.wall_West:
+                    elif current_tile == self.wall_West:
                         tile = self.wall_CornerR
 
+            elif is_vertical_wall and (not north_nonwall) and south_nonwall:
+                if not east_nonwall:
+                    tile = self.wall_hL
+                elif not west_nonwall:
+                    tile = self.wall_South
+
+            elif is_horizontal_wall and is_north_empty:
+                if is_west_vertical:
+                    tile = self.wall_hL
+
+            elif is_horizontal_wall and north_nonwall:
+
+                if is_south_vertical:
+                    if is_southeast_vertical:
+                        tile = self.wall_CornerL
+                    elif is_southwest_vertical:
+                        tile = self.wall_CornerR
+
+                elif east_nonwall:
+                    tile = self.wall_South
+                elif west_nonwall:
+                    tile = self.wall_hL
+
+                elif is_west_inner_corner:
+                    tile = self.wall_hL
+                elif is_east_inner_corner:
+                    tile = self.wall_South
+            elif is_south_empty and north_nonwall:
+                tile = self.wall_South
+
+            elif is_north_empty and south_nonwall:
+                tile = self.wall_North
             if tile:
                 self.tile_array[wall[0]][wall[1]] = tile

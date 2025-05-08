@@ -1,60 +1,60 @@
-WNNNNNNNNNNNNEWNNNNNNNNNNNEWNNNNNNNEWNNNNNNEWNNNNNNNNNNNNNNE
-W            EW           EW       EW      EW              E
-W            EW           EW       EW      EW              E
-W            EW           P        EW      EW              E
-W            EW           <>       EW      EW              E
-W            EW           EW       EW      EW              E
-W            EW           EW       EW      EW              E
-WSSSSSSSSPSSSEW           EW       EW      EW              E
-W            EW           EW       EW      EW              E
-W            EW           EWSPSSSSSEW      EW              E
-W            EWSSSSSSSSSSSEW       EWSPSSSSEW!SSSSSSSSPSSSSE
-W            EW           EW       EW      EW              E
-W            EW           EW       EW      EW              E
-W            EW           EW       EW      EW              E
-W            EW            P       P       EW              E
-W            EW           <>       <>      EW              E
-W            EW           EW       EW      EW              E
-W            EW           EW       EW       !              E
-W            !            EW       EW      <>              E
-W!SSSSSSSPSSSSSSSSSSSSSSS!SSSSSSSSS}SSSSPSS}SSSSSPSSSSSSSSSE
-W      EW             EW          EW      EW      EW       E
-W      EW             EW          EW      EW      EW       E
-W      EW             EW          EW      EW      EW       E
-W       P             EW          EW      EW      EW       E
-W      <>             P           P       EW      EW       E
-W      EW             <>          <>      EW      EW       E
-W      EW             EW          EW      EW       !       E
-W      EW             EW          EW      EWSSSSPSS<SSSSPSSE
-W      EW             EW          EWSSSPSSEW       EW      E
-WSSSSPSEW             EW          EW      EW       EW      E
-W      EW             EW          EW      EW       EW      E
-W      EW             EW          EW      EW       EW      E
-W      EW             EW          EW      P        P       E
-W       !             EW          EW      <>       <>      E
-W      <>SSSSSSSSSSS!S}SSSSSSSSSSSEW      EW       EW      E
-W      EW            EW           EW      EW       EW      E
-W      EW            EW           EWSSSSSSSSSSSSSSSSSSSPSSSE
-W      EW            EW           EW          EW           E
-W      EW            EW           EW          EW           E
-W      !             EW           EW          !            E
-WPSSSSS<>            EW           EW          <>           E
-W      EW            EW           EW          EW           E
-W      EW            EW           EW          !            E
-W      EW            EW            !          <>           E
-W      EW            EW           <>SSSSPSSSSSSSSSSSSSSPSSSE
-W      EW            EW           EW       EW      EW      E
-W      EW            EW            !       EW      EW      E
-W      EW            EW           <>        !      EW      E
-WSSSPSSEWSSSSSSSSSPSSEW           EW       <>      EW      E
-W      EW            EWSS!SSSSSPSSEW       EW      EW      E
-W      EW            EW           EW       EW      EW      E
-W      EW             P            P       EW      EW      E
-W      EW            <>           <>       EW      EW      E
-W      EW            EW           EW       EW      EW      E
-W      EW            EW           EW       EW      EW      E
-W      P             EW           EW       EW      EW      E
-W      <>            EW           EW       EW       P      E
-W      EW            EW           EW       P       <>      E
-W      EW            EW           EW       <>      EW      E
-{SSSSSS}{SSSSSSSSSSSS}{SSSSSSSSSSS}{SSSSSSS}{SSSSSS}{SSSSSS}
+WLNNNNNNNNEWLNNNNNEWLNNNNNNEWLNNNNNNNEWLNNNNNNEWLNNNNNNNNNNE
+W         EW      EW       EW        EW       EW           E
+W         EW      EW       EW        EW       EW           E
+W         EW      EW       EW        EW       EW           E
+W         EW      LS       EW        EW       EW           E
+W         EW      P        EW        EW       EW           E
+W         LS      <>       EW        EW       EW           E
+W         !       EW       EW        EW       EW           E
+W         <>      EWLSPLSSSEWLSSSSSSPEW       EW           E
+W         EW      EW       EW        EW       EW           E
+WLSPLSS<>LSSS!LSSSEW       EW        EW       EW           E
+W      EW         LS       LS        LS       LS           E
+W      EW         P        P          P        P           E
+W      EW         <>       <>        <>LSSSSSSSS<>LSSSSSPLSE
+W      EW         EW       EW        EW         EW         E
+W      EW         EW       EW        EW         EW         E
+W      EW         EW       EW        EW         EW         E
+W      EW         EWLSSSSSSEWLSSSSSSSEW         EW         E
+WLSSPLSEWLSSSSSSSSEW       EW        EW         EW         E
+W      EW         EW       EW        EW         EW         E
+W      LS         EW       EW        EW         EW         E
+W      P          EW       EW        EW         EW         E
+W      <>         EW       EW        EW         EW         E
+W      EW         EW       LS        EW         EW         E
+W      EW         EW       P         EW         LS         E
+W      EW         EW       <>        EW          P         E
+WLSSSSSSS<>LSPLSSSEWLSSSS!LEWLSSPLSSSEW         <>         E
+W        EW       EW       EW        LS         EW         E
+W        EW       EW       EW         !         EW         E
+W        EW       EW       EW        <>LSPLSSSSSSSL<>LSSSSPE
+W        EW       EW       EW        LS            EW      E
+W        EW       EW       EW         P            EW      E
+W        EW       EW       EW        <>            EW      E
+W        LS       EW       EW        EW            EW      E
+W        P        LS       EW        EW            EW      E
+W        <>        P       EW        EW            EW      E
+W        EW       <>       EW        EW            LS      E
+W        EW       EW       EW        EW            P       E
+W        EW       EW       EW        EW            <>      E
+W        EW       EW       EW        EW            EW      E
+WLSSSSS<>SSLSSSSS<>SLSPLSSSSSLSSS<>LSSSLSSSS<>LSSSSSSLSSPLSE
+W      LS        EW              EW         EW             E
+W      !         EW              EW         EW             E
+W      <>        EW              EW         EW             E
+W      EW        EW              EW         EW             E
+W      EW        EW              EW         EW             E
+W      EW        EW              EW         EW             E
+W      EW        EW              EW         EW             E
+W      EW        EW              EW         EW             E
+WSPLSSSSS<>LSSPLSEW              EW         EW             E
+W        EW      EW              EWS!LSSSPLSEWLSSSPLSSSSSS!E
+W        EW      EWLSSSSSSPLSSSSSEW         EW             E
+W        LS      LS              EW         EW             E
+W         P       P              LS         EW             E
+W        <>      <>               P         LS             E
+W        EW      EW              <>         P              E
+W        EW      EW              EW         <>             E
+W        EW      EW              EW         EW             E
+W        EW      EW              EW         EW             E
+{LSSSSSSS}{LSSSSS}{LSSSSSSSSSSSSS}{LSSSSSSSS}{LSSSSSSSSSSSS}
