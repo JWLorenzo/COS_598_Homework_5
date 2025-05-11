@@ -17,14 +17,17 @@ def generate_Dungeon(width: int, height: int) -> None:
     root.tile_array.create_Doors(path)
 
     # Before we yaasify the dungeon, we should mark the corridors.
-    root.mark_as_Corridor()
+    root.iterate_corridors()
+
+    root.tile_array.create_Corridor()
 
     # for i in path:
     #     root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.door
-    root.tile_array.clean_Walls()
-    root.tile_array.mesh_walls()
-    root.tile_array.create_inner_Corners()
-    root.tile_array.clean_Doors()
+    # root.tile_array.clean_Walls()
+
+    # root.tile_array.mesh_walls()
+    # root.tile_array.create_inner_Corners()
+    # root.tile_array.clean_Doors()
 
     # root.tile_array.cleanup_Dungeon()
     with open("tilemap.txt", "w") as f:
@@ -79,6 +82,7 @@ def generate_dungeon_image(tile_map: tileArray) -> None:
         ),
         tile_map.locked: Image.open("game_images/Dungeon_Tiles/final/Door_Locked.jpg"),
         tile_map.door: Image.open("game_images/Dungeon_Tiles/final/Door.jpg"),
+        tile_map.empty: Image.open("game_images/Dungeon_Tiles/final/Empty.jpg"),
     }
 
     width, height = tiles[tile_map.wall_North].size

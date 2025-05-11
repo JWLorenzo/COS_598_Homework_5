@@ -27,7 +27,6 @@ class Node:
         self.corridor_margin: int = 2
 
         self.min_corridor_thickness: int = 3
-        self.is_corridor: bool = False
 
         self.corridor_chance = 0.5
 
@@ -136,47 +135,68 @@ class Node:
         if self.right:
             self.right.carve_Dungeon()
 
-    def mark_as_Corridor(self) -> None:
-        if self.is_Leaf():
+    def iterate_corridors(self) -> None:
 
-            door_list: list[str] = [
-                self.tile_array.door,
-                self.tile_array.locked,
-            ]
+        if self.right and self.left:
 
-            north_wall: list[str] = self.tile_array.tile_array[self.min_y][
-                self.min_x + 1 : self.max_x
-            ]
-            south_wall: list[str] = self.tile_array.tile_array[self.max_y - 1][
-                self.min_x + 1 : self.max_x
-            ]
-            east_wall: list[str] = [
-                self.tile_array.tile_array[y][self.max_x - 1]
-                for y in range(self.min_y + 1, self.max_y)
-            ]
-            west_wall: list[str] = [
-                self.tile_array.tile_array[y][self.min_x]
-                for y in range(self.min_y + 1, self.max_y)
-            ]
-            north_valid: bool = any([x in north_wall for x in door_list])
-            south_valid: bool = any([x in south_wall for x in door_list])
-            east_valid: bool = any([x in east_wall for x in door_list])
-            west_valid: bool = any([x in west_wall for x in door_list])
+            if self.right.is_Leaf() and self.left.is_Leaf():
+                if random.random() < 0.5:
+                    self.left.mark_as_Corridor()
+                else:
+                    self.right.mark_as_Corridor()
+                return
+            elif self.right.is_Leaf() and (not self.left.is_Leaf()):
+                if random.random() < 0.5:
+                    self.right.mark_as_Corridor()
 
-            if (
-                [north_valid, south_valid, east_valid, west_valid].count(True) >= 2
-            ) and random.random() > self.corridor_chance:
-                print("Successfully marked")
-                self.is_corridor = True
-                self.tile_array.corridor_rooms.append(
-                    (self.min_x, self.max_x, self.min_y, self.max_y)
-                )
-            return
+                self.left.iterate_corridors()
+                return
+
+            elif (not self.right.is_Leaf()) and (self.left.is_Leaf()):
+                self.left.mark_as_Corridor()
+
+                self.right.iterate_corridors()
+                return
 
         if self.left:
-            self.left.mark_as_Corridor()
+            self.left.iterate_corridors()
         if self.right:
-            self.right.mark_as_Corridor()
+            self.right.iterate_corridors()
+
+    def mark_as_Corridor(self) -> None:
+        door_list: list[str] = [
+            self.tile_array.door,
+            self.tile_array.locked,
+        ]
+
+        north_list: list[tuple[int, int]] = []
+        south_list: list[tuple[int, int]] = []
+        east_list: list[tuple[int, int]] = []
+        west_list: list[tuple[int, int]] = []
+
+        for col in range(self.min_x, self.max_x):
+            if self.tile_array.tile_array[self.min_y][col] in door_list:
+                north_list.append((self.min_y, col))
+            if self.tile_array.tile_array[self.max_y - 1][col] in door_list:
+                south_list.append((self.max_y - 1, col))
+
+        for row in range(self.min_y, self.max_y):
+            if self.tile_array.tile_array[row][self.max_x - 1] in door_list:
+                east_list.append((row, self.max_x - 1))
+            if self.tile_array.tile_array[row][self.min_x] in door_list:
+                west_list.append((row, self.min_x))
+
+        north_valid: bool = len(north_list) > 0
+        south_valid: bool = len(south_list) > 0
+        east_valid: bool = len(east_list) > 0
+        west_valid: bool = len(west_list) > 0
+
+        if [north_valid, south_valid, east_valid, west_valid].count(True) >= 2:
+            print("Successfully marked")
+            self.tile_array.corridor_rooms[
+                (self.min_x, self.max_x, self.min_y, self.max_y)
+            ] = {"N": north_list, "S": south_list, "E": east_list, "W": west_list}
+        return
 
     def trim_Rooms(self) -> None:
         if self.is_Leaf():

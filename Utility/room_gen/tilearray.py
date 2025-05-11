@@ -1,6 +1,7 @@
 from Utility.CONSTANTS import *
 import random
 import heapq
+import math
 
 
 class tileArray:
@@ -31,9 +32,9 @@ class tileArray:
 
         self.corner_coord: list[tuple[int, int]] = []  # row, column
         self.wall_coords: dict[tuple[int, int], None] = {}  # row, column
-        self.corridor_rooms: list[tuple[int, int, int, int]] = (
-            []
-        )  # xmin, xmax, ymin,ymax
+        self.corridor_rooms: dict[
+            tuple[int, int, int, int], dict[str, list[tuple[int, int]]]
+        ] = {}  # xmin, xmax, ymin,ymax : row,col
         # Floor Tiles
 
         self.floor: str = " "
@@ -766,7 +767,83 @@ class tileArray:
                 self.tile_array[wall[0]][wall[1]] = tile
 
     def create_Corridor(self) -> None:
-        pass
+
+        for room in self.corridor_rooms:
+            x_min, x_max, y_min, y_max = room
+            for row in range(y_min + 1, y_max - 1):
+                for column in range(x_min + 1, x_max - 1):
+                    self.tile_array[row][column] = self.empty
+            # col_avg_coord: int = sum([x[1] for x in self.corridor_rooms[room]]) // len(
+            #     self.corridor_rooms[room]
+            # )
+            # row_avg_coord: int = sum([y[0] for y in self.corridor_rooms[room]]) // len(
+            #     self.corridor_rooms[room]
+            # )
+            print(
+                f"flat x: {[x[1] for l in self.corridor_rooms[room].values() for x in l]}"
+            )
+            print(
+                f"flat y: {[x[0] for l in self.corridor_rooms[room].values() for x in l]}"
+            )
+            flat_x: list[int] = [
+                x[1] for l in self.corridor_rooms[room].values() for x in l
+            ]
+            flat_y: list[int] = [
+                y[0] for l in self.corridor_rooms[room].values() for y in l
+            ]
+
+            x_center: int = math.ceil(sum(flat_x) / len(flat_x))
+            y_center: int = math.ceil(sum(flat_y) / len(flat_y))
+
+            self.tile_array[y_center][x_center] = self.floor
+
+            for direction in self.corridor_rooms[room]:
+                for door in self.corridor_rooms[room][direction]:
+                    lesser_x: bool = door[1] < x_center
+                    greater_x: bool = door[1] > x_center
+                    lesser_y: bool = door[0] < y_center
+                    greater_y: bool = door[0] > y_center
+
+                    door_row, door_col = door
+
+                    if direction == "N":
+                        for row in range(door_row + 1, y_center + 1):
+                            self.tile_array[row][door_col] = self.floor
+                        if lesser_x:
+                            for col in range(door_col + 1, x_center + 1):
+                                self.tile_array[y_center][col] = self.floor
+                        elif greater_x:
+                            for col in range(x_center, door_col):
+                                self.tile_array[y_center][col] = self.floor
+                    elif direction == "S":
+                        for row in range(y_center, door_row):
+                            self.tile_array[row][door_col] = self.floor
+                        if lesser_x:
+                            for col in range(door_col + 1, x_center + 1):
+                                self.tile_array[y_center][col] = self.floor
+                        elif greater_x:
+                            for col in range(x_center, door_col):
+                                self.tile_array[y_center][col] = self.floor
+                    elif direction == "E":
+                        for col in range(x_center, door_col):
+                            self.tile_array[door_row][col] = self.floor
+                        if lesser_y:
+                            for row in range(door_row + 1, y_center + 1):
+                                self.tile_array[row][x_center] = self.floor
+                        else:
+                            for row in range(y_center, door_row):
+                                self.tile_array[row][x_center] = self.floor
+                    elif direction == "W":
+                        for col in range(door_col + 1, x_center + 1):
+                            self.tile_array[door_row][col] = self.floor
+                        if lesser_y:
+                            for row in range(door_row + 1, y_center + 1):
+                                self.tile_array[row][x_center] = self.floor
+                        else:
+                            for row in range(y_center, door_row):
+                                self.tile_array[row][x_center] = self.floor
+            print(room, self.corridor_rooms[room])
+            # print(f"Wall Door Coords: North {}")
 
     # Pseudocode for handling the corridor cells.
     """
