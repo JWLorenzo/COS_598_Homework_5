@@ -40,6 +40,9 @@
 - In a flash of insight, I realized that the algorithm I created for generating the horizontal corridors could be used on the vertical corridors as I can effectively rotate the map and it uses the same structure. 
 
 
+- Idea: To make corridors, what about just taking some of the rooms and making them into corridor rooms? Then just use basic l-shapes for the corridors. Pick one route and the rest l shape to it. Make it a 40% chance of it being a corridor, and have a maximum number of corridors to prevent the entire level from becoming corridor rooms.
+
+
 # Progress Notes:
 
 - 5/7/25: Modified the A* code so that door paths are treated as high priority paths. This makes it so it should use as little doors as possibe and any locked doors generated should be useful for the player.

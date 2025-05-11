@@ -15,6 +15,10 @@ def generate_Dungeon(width: int, height: int) -> None:
     path = list(set(root.tile_array.leaf_Recursion(leaves[-1], leaves[:-1])))
 
     root.tile_array.create_Doors(path)
+
+    # Before we yaasify the dungeon, we should mark the corridors.
+    root.mark_as_Corridor()
+
     # for i in path:
     #     root.tile_array.tile_array[i[1]][i[0]] = root.tile_array.door
     root.tile_array.clean_Walls()

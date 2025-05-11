@@ -27,6 +27,9 @@ class Node:
         self.corridor_margin: int = 2
 
         self.min_corridor_thickness: int = 3
+        self.is_corridor: bool = False
+
+        self.corridor_chance = 0.5
 
     def get_Center(self) -> tuple[int, int]:
         return (
@@ -132,6 +135,48 @@ class Node:
             self.left.carve_Dungeon()
         if self.right:
             self.right.carve_Dungeon()
+
+    def mark_as_Corridor(self) -> None:
+        if self.is_Leaf():
+
+            door_list: list[str] = [
+                self.tile_array.door,
+                self.tile_array.locked,
+            ]
+
+            north_wall: list[str] = self.tile_array.tile_array[self.min_y][
+                self.min_x + 1 : self.max_x
+            ]
+            south_wall: list[str] = self.tile_array.tile_array[self.max_y - 1][
+                self.min_x + 1 : self.max_x
+            ]
+            east_wall: list[str] = [
+                self.tile_array.tile_array[y][self.max_x - 1]
+                for y in range(self.min_y + 1, self.max_y)
+            ]
+            west_wall: list[str] = [
+                self.tile_array.tile_array[y][self.min_x]
+                for y in range(self.min_y + 1, self.max_y)
+            ]
+            north_valid: bool = any([x in north_wall for x in door_list])
+            south_valid: bool = any([x in south_wall for x in door_list])
+            east_valid: bool = any([x in east_wall for x in door_list])
+            west_valid: bool = any([x in west_wall for x in door_list])
+
+            if (
+                [north_valid, south_valid, east_valid, west_valid].count(True) >= 2
+            ) and random.random() > self.corridor_chance:
+                print("Successfully marked")
+                self.is_corridor = True
+                self.tile_array.corridor_rooms.append(
+                    (self.min_x, self.max_x, self.min_y, self.max_y)
+                )
+            return
+
+        if self.left:
+            self.left.mark_as_Corridor()
+        if self.right:
+            self.right.mark_as_Corridor()
 
     def trim_Rooms(self) -> None:
         if self.is_Leaf():

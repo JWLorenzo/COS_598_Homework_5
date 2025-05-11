@@ -7,7 +7,7 @@ class tileArray:
     def __init__(self, width: int, height: int) -> None:
 
         # Basic
-        self.empty: str = ""
+        self.empty: str = "."
         self.map_width: int = width
         self.map_height: int = height
         self.w_range: list[int] = list(range(self.map_width))
@@ -31,7 +31,9 @@ class tileArray:
 
         self.corner_coord: list[tuple[int, int]] = []  # row, column
         self.wall_coords: dict[tuple[int, int], None] = {}  # row, column
-
+        self.corridor_rooms: list[tuple[int, int, int, int]] = (
+            []
+        )  # xmin, xmax, ymin,ymax
         # Floor Tiles
 
         self.floor: str = " "
@@ -147,7 +149,7 @@ class tileArray:
                 if tile in (self.cornerbl, self.cornerbr):
                     self.corner_coord.append((row, column))
 
-    def carve_Corridors(
+    def carve_Entries(
         self,
         iter_list: list[tuple[tuple[int, int], tuple[int, int]]],
         min_val: int,
@@ -207,7 +209,7 @@ class tileArray:
                             y_list = sorted(y_list)
                 else:
                     if len(coord_list) > 0:
-                        self.carve_Corridors(coord_list, y_list[0], y_list[-1])
+                        self.carve_Entries(coord_list, y_list[0], y_list[-1])
                         x_list = []
                         y_list = []
                         coord_list = []
@@ -250,7 +252,7 @@ class tileArray:
 
             if not valid_column:
                 if len(coord_list) > 0:
-                    self.carve_Corridors(
+                    self.carve_Entries(
                         coord_list, x_list[0], x_list[-1], horizontal=False
                     )
                     x_list = []
@@ -762,3 +764,28 @@ class tileArray:
                 tile = self.wall_North
             if tile:
                 self.tile_array[wall[0]][wall[1]] = tile
+
+    def create_Corridor(self) -> None:
+        pass
+
+    # Pseudocode for handling the corridor cells.
+    """
+    Hold a boolean that contains if the cell is a corridor or a room
+    We can add this as a tag during the binary space partitioning with ease. 
+    We can also keep track of the coordinates of the four corners of the room.
+
+    When generating paths, we generate as normal, then we iterate over just the corridor rooms.
+
+    Check each wall of the room, if it contains a doorway, keep it, else, if there is a blank spot, use that as the corridor entry point.
+
+    For each wall, get the coordinates of the door or entryway. Randomly pick one of the doorways and then do l-shaped corridors towards that doorway. 
+
+    For deciding the shape of the doorway, we pick the center of the room.
+    - If either coord aligns with the center, we just draw a straight line of floor tiles
+    - If the y coordinate is greater, we draw a line horizontally until we are at the x of the center, then we draw a line upwards to the middle
+    - If the y coordinate is lesser, we draw a line horizontally until we are at the x of the center, then we draw downwards
+    - If the x is greater, we draw going left
+    - If the x is lesser, we draw going right
+    
+    Then, just run the wall cleanup as before.
+    """
