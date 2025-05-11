@@ -542,6 +542,12 @@ class tileArray:
                         self.wall_coords.pop((coord[0][0], coord[0][1]), None)
                         self.wall_coords.pop((coord[1][0], coord[1][1]), None)
 
+    def lock_doors(self) -> None:
+        pass
+
+    def doors_to_walls(self) -> None:
+        pass
+
     def mesh_walls(self) -> None:
         for corner in self.corner_coord:
             directions = self.get_directions(corner[0], corner[1])
